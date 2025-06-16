@@ -13,7 +13,7 @@ const FIRE_INTERVAL = 500; // ms
 const JetSprite = () => {
   const jetSpriteRef = useRef<Sprite>(null);
   const { app } = useApplication();
-  const { left, right } = useControls();
+  const { left, right, touchX } = useControls();
 
   const [isFiring] = useState(true);
   const [lastFireTime, setLastFireTime] = useState(0);
@@ -36,6 +36,10 @@ const JetSprite = () => {
 
     if (right) {
       jetSpriteRef.current.x += JET_SPEED;
+    }
+
+    if (touchX) {
+      jetSpriteRef.current.x = touchX;
     }
 
     const halfWidth = jetSpriteRef.current.width / 2;

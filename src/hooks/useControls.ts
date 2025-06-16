@@ -4,6 +4,7 @@ const useControls = () => {
   const [keys, setKeys] = useState({
     left: false,
     right: false,
+    touchX: 0,
   });
 
   useEffect(() => {
@@ -25,8 +26,13 @@ const useControls = () => {
       }
     };
 
+    const handleTouchMove = (e: TouchEvent) => {
+      setKeys((prev) => ({ ...prev, touchX: e.touches[0].clientX }));
+    };
+
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
+    window.addEventListener('touchmove', handleTouchMove);
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
