@@ -28,15 +28,15 @@ export default function App() {
         await Assets.load([
           {
             alias: 'jet',
-            src: '/assets/jet.png',
+            src: './assets/jet.png',
           },
           {
             alias: 'missile_1',
-            src: '/assets/missile_1.png',
+            src: './assets/missile_1.png',
           },
           {
             alias: 'enemy_1',
-            src: '/assets/enemy_1.png',
+            src: './assets/enemy_1.png',
           },
         ]);
 
