@@ -5,7 +5,10 @@ import JetSprite from './sprites/Jet';
 import GameLoading from './components/GameLoading';
 import GameMenu from './components/GameMenu';
 import GameOver from './components/GameOver';
-import { useGameStateValue } from './atoms/useGameState';
+import { useGameStateValue } from './atoms/gameStateAtom';
+import EnemySprite from './sprites/EnemySprite';
+import GameLoop from './components/GameLoop';
+import GameStats from './components/GameStats';
 
 // extend tells @pixi/react what Pixi.js components are available
 extend({
@@ -30,6 +33,10 @@ export default function App() {
           {
             alias: 'missile_1',
             src: '/assets/missile_1.png',
+          },
+          {
+            alias: 'enemy_1',
+            src: '/assets/enemy_1.png',
           },
         ]);
 
@@ -60,9 +67,13 @@ export default function App() {
 
   return (
     <>
+      <GameStats />
+
       {/* We'll wrap our components with an <Application> component to provide the Pixi.js Application context */}
       <Application background={'#1099bb'} resizeTo={window}>
         <JetSprite />
+        <EnemySprite />
+        <GameLoop />
       </Application>
     </>
   );

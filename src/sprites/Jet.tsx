@@ -1,7 +1,9 @@
 import { useApplication, useTick } from '@pixi/react';
-import { Assets, Container, Sprite, Ticker } from 'pixi.js';
+import { Assets, Container, Sprite } from 'pixi.js';
 import { useRef, useState } from 'react';
 import useControls from '../hooks/useControls';
+import { PADDING } from '../config';
+import { useSetMissilesAtom } from '../atoms/missileAtom';
 
 const JET_SPEED = 3;
 const MISSILE_SPEED = 2;
@@ -12,10 +14,10 @@ const JetSprite = () => {
   const { app } = useApplication();
   const { left, right } = useControls();
 
-  const [isFiring, setIsFiring] = useState(true);
+  const [isFiring] = useState(true);
   const [lastFireTime, setLastFireTime] = useState(0);
   const missileContainerRef = useRef<Container>(null);
-  const missiles = useRef<Sprite[]>([]);
+  const setMissiles = useSetMissilesAtom();
 
   const controlJet = () => {
     if (!jetSpriteRef.current) return;
@@ -29,12 +31,11 @@ const JetSprite = () => {
     }
 
     const halfWidth = jetSpriteRef.current.width / 2;
-    const padding = 10;
 
     // Keep the jet within the screen boundaries
     jetSpriteRef.current.x = Math.max(
-      halfWidth + padding,
-      Math.min(app.screen.width - halfWidth - padding, jetSpriteRef.current.x),
+      halfWidth + PADDING,
+      Math.min(app.screen.width - halfWidth - PADDING, jetSpriteRef.current.x),
     );
   };
 
@@ -47,7 +48,7 @@ const JetSprite = () => {
     missile.y = jetSpriteRef.current.y;
 
     missileContainerRef.current?.addChild(missile);
-    missiles.current.push(missile);
+    setMissiles((prev) => [...prev, missile]);
   };
 
   useTick((ticker) => {
@@ -63,14 +64,17 @@ const JetSprite = () => {
       }
     }
 
-    missiles.current.forEach((missile, index) => {
-      missile.y -= MISSILE_SPEED;
-      if (missile.y < -20) {
-        // Remove off-screen bullet
-        missileContainerRef.current?.removeChild(missile);
-        missiles.current.splice(index, 1);
-      }
-    });
+    setMissiles((prev) =>
+      prev.filter((missile) => {
+        missile.y -= MISSILE_SPEED;
+        if (missile.y < -20) {
+          // Remove off-screen bullet
+          missileContainerRef.current?.removeChild(missile);
+          return false;
+        }
+        return true;
+      }),
+    );
   });
 
   return (

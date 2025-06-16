@@ -1,4 +1,4 @@
-import { useSetGameState } from '../atoms/useGameState';
+import { useSetGameState } from '../atoms/gameStateAtom';
 
 const GameMenu = () => {
   const setGameState = useSetGameState();
