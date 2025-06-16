@@ -1,6 +1,7 @@
-import { Application, extend, useApplication, useTick } from "@pixi/react";
-import { Assets, Container, Sprite, Texture } from "pixi.js";
-import { useEffect, useRef, useState } from "react";
+import { Application, extend } from "@pixi/react";
+import { Assets, Container, Sprite } from "pixi.js";
+import { useEffect, useState } from "react";
+import JetSprite from "./sprites/Jet";
 
 // extend tells @pixi/react what Pixi.js components are available
 extend({
@@ -8,48 +9,48 @@ extend({
   Sprite,
 });
 
-const BunnySprite = () => {
-  const { app } = useApplication();
-
-  // The Pixi.js `Sprite`
-  const spriteRef = useRef<Sprite>(null);
-  const [texture, setTexture] = useState(Texture.EMPTY);
-
-  // Preload the sprite if it hasn't been loaded yet
-  useEffect(() => {
-    if (texture === Texture.EMPTY) {
-      Assets.load("/assets/bunny.png").then((result) => {
-        setTexture(result);
-      });
-    }
-  }, [texture]);
-
-  // Listen for animate update
-  useTick((ticker) => {
-    if (!spriteRef.current) return;
-    // Just for fun, let's rotate mr rabbit a little.
-    // * Delta is 1 if running at 100% performance *
-    // * Creates frame-independent transformation *
-    spriteRef.current.rotation += 0.1 * ticker.deltaTime;
-  });
-
-  return (
-    <pixiSprite
-      ref={spriteRef}
-      texture={texture}
-      anchor={0.5}
-      x={app.screen.width / 2}
-      y={app.screen.height / 2}
-    />
-  );
-};
-
 export default function App() {
+  const [assetsLoaded, setAssetsLoaded] = useState(false);
+  const [loadingError, setLoadingError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    const loadAssets = async () => {
+      try {
+        await Assets.load([
+          {
+            alias: "jet",
+            src: "/assets/jet.png",
+          },
+          {
+            alias: "missile_1",
+            src: "/assets/missile_1.png",
+          },
+        ]);
+
+        setAssetsLoaded(true);
+      } catch (error) {
+        setLoadingError(
+          error instanceof Error ? error : new Error("Failed to load assets"),
+        );
+      }
+    };
+
+    loadAssets();
+  }, []);
+
+  if (loadingError) {
+    return <div>Error loading assets: {loadingError.message}</div>;
+  }
+
+  if (!assetsLoaded) {
+    return <div>Loading assets...</div>;
+  }
+
   return (
     // We'll wrap our components with an <Application> component to provide
     // the Pixi.js Application context
     <Application background={"#1099bb"} resizeTo={window}>
-      <BunnySprite />
+      <JetSprite />
     </Application>
   );
 }

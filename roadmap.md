@@ -22,8 +22,8 @@
 ## 🧱 Development Milestones
 
 ### ✅ 1. Project Setup
-- [ ] Initialize Vite + React + PixiJS
-- [ ] Render basic canvas
+- [x] Initialize Vite + React + PixiJS
+- [x] Render basic canvas
 - [ ] Add debug text or FPS counter
 
 ---
