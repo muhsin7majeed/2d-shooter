@@ -1,7 +1,7 @@
-import { useApplication, useTick } from "@pixi/react";
-import { Assets, Container, Sprite, Ticker } from "pixi.js";
-import { useRef, useState } from "react";
-import useControls from "../hooks/useControls";
+import { useApplication, useTick } from '@pixi/react';
+import { Assets, Container, Sprite, Ticker } from 'pixi.js';
+import { useRef, useState } from 'react';
+import useControls from '../hooks/useControls';
 
 const JET_SPEED = 3;
 const MISSILE_SPEED = 2;
@@ -41,7 +41,7 @@ const JetSprite = () => {
   const fireMissile = () => {
     if (!jetSpriteRef.current || !missileContainerRef.current) return;
 
-    const missile = new Sprite(Assets.get("missile_1"));
+    const missile = new Sprite(Assets.get('missile_1'));
     missile.anchor.set(0.5);
     missile.x = jetSpriteRef.current.x;
     missile.y = jetSpriteRef.current.y;
@@ -77,7 +77,7 @@ const JetSprite = () => {
     <>
       <pixiSprite
         ref={jetSpriteRef}
-        texture={Assets.get("jet")}
+        texture={Assets.get('jet')}
         anchor={0.5}
         x={app.screen.width / 2}
         y={app.screen.height - 100}

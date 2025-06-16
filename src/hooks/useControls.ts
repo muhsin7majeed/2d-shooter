@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 const useControls = () => {
   const [keys, setKeys] = useState({
@@ -8,29 +8,29 @@ const useControls = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
         setKeys((prev) => ({ ...prev, left: true }));
       }
-      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+      if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
         setKeys((prev) => ({ ...prev, right: true }));
       }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
         setKeys((prev) => ({ ...prev, left: false }));
       }
-      if (e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+      if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
         setKeys((prev) => ({ ...prev, right: false }));
       }
     };
 
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('keyup', handleKeyUp);
 
     return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, []);
 

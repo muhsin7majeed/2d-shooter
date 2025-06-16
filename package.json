@@ -1,5 +1,5 @@
 {
-  "name": "space-invaders",
+  "name": "worlds-on-fire",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@pixi/react": "^8.0.0",
+    "jotai": "^2.12.5",
     "pixi.js": "^8.8.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
