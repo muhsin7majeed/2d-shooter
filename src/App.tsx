@@ -10,7 +10,7 @@ import EnemySprite from './sprites/EnemySprite';
 import GameLoop from './components/GameLoop';
 import GameStats from './components/GameStats';
 
-// extend tells @pixi/react what Pixi.js components are available
+// extend tells @pixi/react what Pixi.js components are availables
 extend({
   Container,
   Sprite,
