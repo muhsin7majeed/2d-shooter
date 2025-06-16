@@ -17,6 +17,9 @@
   width: 100%;
   backdrop-filter: blur(10px);
   padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
   .game-stats-score {
     font-size: 24px;
@@ -24,4 +27,17 @@
     color: white;
     text-align: right;
   }
+}
+
+.game-over {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  text-align: center;
 }

@@ -1,9 +1,10 @@
 import { useApplication, useTick } from '@pixi/react';
 import { Assets, Container, Sprite } from 'pixi.js';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useControls from '../hooks/useControls';
 import { PADDING } from '../config';
 import { useSetMissilesAtom } from '../atoms/missileAtom';
+import { useSetPlayerRef } from '../atoms/playerAtom';
 
 const JET_SPEED = 3;
 const MISSILE_SPEED = 2;
@@ -18,6 +19,13 @@ const JetSprite = () => {
   const [lastFireTime, setLastFireTime] = useState(0);
   const missileContainerRef = useRef<Container>(null);
   const setMissiles = useSetMissilesAtom();
+  const setPlayerRef = useSetPlayerRef();
+
+  useEffect(() => {
+    if (jetSpriteRef.current) {
+      setPlayerRef(jetSpriteRef.current);
+    }
+  }, [setPlayerRef]);
 
   const controlJet = () => {
     if (!jetSpriteRef.current) return;

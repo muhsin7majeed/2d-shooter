@@ -1,6 +1,6 @@
-import { Application, extend } from '@pixi/react';
+import { Application, extend, ApplicationRef } from '@pixi/react';
 import { Assets, Container, Sprite } from 'pixi.js';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import JetSprite from './sprites/Jet';
 import GameLoading from './components/GameLoading';
 import GameMenu from './components/GameMenu';
@@ -19,7 +19,7 @@ extend({
 export default function App() {
   const [assetsLoaded, setAssetsLoaded] = useState(false);
   const [loadingError, setLoadingError] = useState<Error | null>(null);
-
+  const appRef = useRef<ApplicationRef>(null);
   const gameState = useGameStateValue();
 
   useEffect(() => {
@@ -49,6 +49,20 @@ export default function App() {
     loadAssets();
   }, []);
 
+  useEffect(() => {
+    console.log('gameState', gameState);
+
+    if (appRef.current) {
+      if (gameState === 'playing') {
+        appRef.current.getApplication()?.start();
+      } else {
+        console.log('stop');
+
+        appRef.current.getApplication()?.stop();
+      }
+    }
+  }, [gameState]);
+
   if (loadingError) {
     return <div>Error loading assets: {loadingError.message}</div>;
   }
@@ -61,16 +75,14 @@ export default function App() {
     return <GameMenu />;
   }
 
-  if (gameState === 'gameover') {
-    return <GameOver />;
-  }
-
   return (
     <>
       <GameStats />
 
+      {gameState === 'gameover' && <GameOver />}
+
       {/* We'll wrap our components with an <Application> component to provide the Pixi.js Application context */}
-      <Application background={'#1099bb'} resizeTo={window}>
+      <Application background={'#1099bb'} resizeTo={window} ref={appRef}>
         <JetSprite />
         <EnemySprite />
         <GameLoop />

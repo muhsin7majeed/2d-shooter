@@ -1,10 +1,10 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 
-type GameState = 'menu' | 'playing' | 'gameover';
+type GameState = 'menu' | 'playing' | 'gameover' | 'paused';
 
-const gameStateAtom = atom<GameState>('playing');
+const gameStateAtom = atom<GameState>('menu');
 
-export const useGameState = () => {
+export const useGameStateAtom = () => {
   return useAtom(gameStateAtom);
 };
 
