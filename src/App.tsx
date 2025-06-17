@@ -9,6 +9,7 @@ import { useGameStateValue } from './atoms/gameStateAtom';
 import EnemySprite from './sprites/EnemySprite';
 import GameLoop from './components/GameLoop';
 import GameStats from './components/GameStats';
+import DevTools from './components/DevTools';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -50,14 +51,10 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    console.log('gameState', gameState);
-
     if (appRef.current) {
       if (gameState === 'playing') {
         appRef.current.getApplication()?.start();
       } else {
-        console.log('stop');
-
         appRef.current.getApplication()?.stop();
       }
     }
@@ -83,6 +80,7 @@ export default function App() {
 
       {/* We'll wrap our components with an <Application> component to provide the Pixi.js Application context */}
       <Application background={'#1099bb'} resizeTo={window} ref={appRef}>
+        <DevTools />
         <JetSprite />
         <EnemySprite />
         <GameLoop />

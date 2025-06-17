@@ -9,6 +9,8 @@ import { useSetPlayerRef } from '../atoms/playerAtom';
 const JET_SPEED = 3;
 const MISSILE_SPEED = 2;
 const FIRE_INTERVAL = 500; // ms
+const ACCELERATION = 0.5;
+const FRICTION = 0.1;
 
 const JetSprite = () => {
   const jetSpriteRef = useRef<Sprite>(null);
@@ -21,6 +23,8 @@ const JetSprite = () => {
   const setMissiles = useSetMissilesAtom();
   const setPlayerRef = useSetPlayerRef();
 
+  const velocityXRef = useRef(0);
+
   useEffect(() => {
     if (jetSpriteRef.current) {
       setPlayerRef(jetSpriteRef.current);
@@ -30,25 +34,34 @@ const JetSprite = () => {
   const controlJet = () => {
     if (!jetSpriteRef.current) return;
 
+    const sprite = jetSpriteRef.current;
+
+    // Apply input to change velocity
     if (left) {
-      jetSpriteRef.current.x -= JET_SPEED;
+      velocityXRef.current = Math.max(velocityXRef.current - ACCELERATION, -JET_SPEED);
+    } else if (right) {
+      velocityXRef.current = Math.min(velocityXRef.current + ACCELERATION, JET_SPEED);
+    } else {
+      // Apply friction when no input
+      if (velocityXRef.current > 0) {
+        velocityXRef.current = Math.max(velocityXRef.current - FRICTION, 0);
+      } else if (velocityXRef.current < 0) {
+        velocityXRef.current = Math.min(velocityXRef.current + FRICTION, 0);
+      }
     }
 
-    if (right) {
-      jetSpriteRef.current.x += JET_SPEED;
-    }
+    // Apply movement
+    sprite.x += velocityXRef.current;
 
+    // Touch input overrides velocity
     if (touchX) {
-      jetSpriteRef.current.x = touchX;
+      sprite.x = touchX;
+      velocityXRef.current = 0; // cancel momentum if touch is used
     }
 
-    const halfWidth = jetSpriteRef.current.width / 2;
-
-    // Keep the jet within the screen boundaries
-    jetSpriteRef.current.x = Math.max(
-      halfWidth + PADDING,
-      Math.min(app.screen.width - halfWidth - PADDING, jetSpriteRef.current.x),
-    );
+    // Clamp to screen
+    const halfWidth = sprite.width / 2;
+    sprite.x = Math.max(halfWidth + PADDING, Math.min(app.screen.width - halfWidth - PADDING, sprite.x));
   };
 
   const fireMissile = () => {
