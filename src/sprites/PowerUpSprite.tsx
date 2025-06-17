@@ -7,7 +7,7 @@ import { usePlayerRef } from '../atoms/playerAtom';
 import { MISSILE_TYPES, MissileTypeInterface } from '../data/missiles';
 import { useSetCurrentMissileAtom } from '../atoms/missileAtom';
 
-const SPAWN_INTERVAL = 2000;
+const SPAWN_INTERVAL = 10000;
 const FALL_SPEED = 2;
 
 const PowerUpSprite = () => {

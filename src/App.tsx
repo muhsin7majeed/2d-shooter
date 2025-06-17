@@ -14,6 +14,8 @@ import { useSetMissilesAtom } from './atoms/missileAtom';
 import { useSetEnemiesAtom } from './atoms/enemiesAtom';
 import { useSetScoreAtom } from './atoms/scoreAtom';
 import PowerUpSprite from './sprites/PowerUpSprite';
+import { MISSILE_TYPES } from './data/missiles';
+import { ENEMY_TYPES } from './data/enemies';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -48,24 +50,6 @@ export default function App() {
             src: './assets/jet.png',
           },
           {
-            alias: 'missile_1',
-            src: './assets/missile_1.png',
-          },
-          {
-            alias: 'missile_2',
-            src: './assets/missile_2.png',
-            label: 'missile_2',
-          },
-          {
-            alias: 'missile_3',
-            src: './assets/missile_3.png',
-            label: 'missile_3',
-          },
-          {
-            alias: 'enemy_1',
-            src: './assets/enemy_1.png',
-          },
-          {
             alias: 'enemy_hit',
             src: './assets/enemy_hit.png',
           },
@@ -73,6 +57,16 @@ export default function App() {
             alias: 'player_hit',
             src: './assets/player_hit.png',
           },
+
+          ...MISSILE_TYPES.map((missile) => ({
+            alias: missile.label,
+            src: `./assets/${missile.texture}.png`,
+          })),
+
+          ...ENEMY_TYPES.map((enemy) => ({
+            alias: enemy.label,
+            src: `./assets/${enemy.texture}.png`,
+          })),
         ]);
 
         setAssetsLoaded(true);

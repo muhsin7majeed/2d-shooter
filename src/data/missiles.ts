@@ -6,6 +6,7 @@ export interface MissileTypeInterface {
   scale: number;
   fireInterval: number;
 }
+
 export const MISSILE_TYPES: MissileTypeInterface[] = [
   {
     label: 'missile_1',

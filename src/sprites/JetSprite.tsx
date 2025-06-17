@@ -6,8 +6,8 @@ import { PADDING } from '../config';
 import { useCurrentMissileAtomValue, useSetMissilesAtom, useSetMissileContainerRefAtom } from '../atoms/missileAtom';
 import { useSetPlayerRef } from '../atoms/playerAtom';
 
-const JET_SPEED = 3;
-const ACCELERATION = 0.5;
+const JET_SPEED = 5;
+const ACCELERATION = 0.2;
 const FRICTION = 0.1;
 
 const JetSprite = () => {

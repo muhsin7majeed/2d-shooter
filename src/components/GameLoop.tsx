@@ -26,12 +26,12 @@ const GameLoop = () => {
   useTick(() => {
     enemies.forEach((enemy) => {
       missiles.forEach((missile) => {
-        if (hitCheck(missile.sprite, enemy)) {
+        if (hitCheck(missile.sprite, enemy.sprite)) {
           // Handle collision
           // 1. Remove the missile
           missile.sprite.parent?.removeChild(missile.sprite);
           // 2. Remove the enemy
-          enemy.parent?.removeChild(enemy);
+          enemy.sprite.parent?.removeChild(enemy.sprite);
           // 3. Update the atoms to remove the collided objects
           setMissiles((prev) => prev.filter((m) => m !== missile));
           setEnemies((prev) => prev.filter((e) => e !== enemy));
@@ -41,8 +41,8 @@ const GameLoop = () => {
           // 4. Add the enemy hit sprite
           const enemyHit = new Sprite(Assets.get('enemy_hit'));
           enemyHit.anchor.set(0.5);
-          enemyHit.x = enemy.x;
-          enemyHit.y = enemy.y;
+          enemyHit.x = enemy.sprite.x;
+          enemyHit.y = enemy.sprite.y;
           enemyHit.scale.set(2);
           enemyHitContainerRef.current?.addChild(enemyHit);
 
@@ -53,14 +53,18 @@ const GameLoop = () => {
         }
       });
 
-      if (playerRef && hitCheck(playerRef, enemy)) {
+      if (playerRef && hitCheck(playerRef, enemy.sprite)) {
         // Handle collision
         // 1. Remove the enemy
-        enemy.parent?.removeChild(enemy);
+        enemy.sprite.parent?.removeChild(enemy.sprite);
         // 2. Update the atoms to remove the collided objects
         setEnemies((prev) => prev.filter((e) => e !== enemy));
         setGameState('gameover');
-        setHighScore((prev) => (prev < score ? score : prev));
+        setHighScore((prev) => {
+          console.log(prev, score);
+
+          return prev < score ? score : prev;
+        });
 
         // 3. Add the player hit sprite
         const playerHit = new Sprite(Assets.get('player_hit'));
