@@ -5,12 +5,18 @@ import useHitCheck from '../hooks/useHitCheck';
 import { useScoreAtomValue, useSetHighScoreAtom, useSetScoreAtom } from '../atoms/scoreAtom';
 import { usePlayerRef } from '../atoms/playerAtom';
 import { useSetGameState } from '../atoms/gameStateAtom';
+import { Container, Sprite } from 'pixi.js';
+import { Assets } from 'pixi.js';
+import { useRef } from 'react';
 
 const GameLoop = () => {
   const [missiles, setMissiles] = useMissilesAtom();
   const [enemies, setEnemies] = useEnemiesAtom();
-  const playerRef = usePlayerRef();
 
+  const enemyHitContainerRef = useRef<Container>(null);
+  const playerHitContainerRef = useRef<Container>(null);
+
+  const playerRef = usePlayerRef();
   const setScore = useSetScoreAtom();
   const hitCheck = useHitCheck();
   const setGameState = useSetGameState();
@@ -31,6 +37,19 @@ const GameLoop = () => {
           setEnemies((prev) => prev.filter((e) => e !== enemy));
 
           setScore((prev) => prev + 1);
+
+          // 4. Add the enemy hit sprite
+          const enemyHit = new Sprite(Assets.get('enemy_hit'));
+          enemyHit.anchor.set(0.5);
+          enemyHit.x = enemy.x;
+          enemyHit.y = enemy.y;
+          enemyHit.scale.set(2);
+          enemyHitContainerRef.current?.addChild(enemyHit);
+
+          // 5. Remove the enemy hit sprite after 1 second
+          setTimeout(() => {
+            enemyHit.parent?.removeChild(enemyHit);
+          }, 300);
         }
       });
 
@@ -42,11 +61,29 @@ const GameLoop = () => {
         setEnemies((prev) => prev.filter((e) => e !== enemy));
         setGameState('gameover');
         setHighScore((prev) => (prev < score ? score : prev));
+
+        // 3. Add the player hit sprite
+        const playerHit = new Sprite(Assets.get('player_hit'));
+        playerHit.anchor.set(0.5);
+        playerHit.x = playerRef.x;
+        playerHit.y = playerRef.y;
+        playerHit.scale.set(4);
+        playerHitContainerRef.current?.addChild(playerHit);
+
+        // 4. Remove the player hit sprite after 1 second
+        setTimeout(() => {
+          playerHit.parent?.removeChild(playerHit);
+        }, 300);
       }
     });
   });
 
-  return null;
+  return (
+    <>
+      <pixiContainer ref={enemyHitContainerRef} />
+      <pixiContainer ref={playerHitContainerRef} />
+    </>
+  );
 };
 
 export default GameLoop;

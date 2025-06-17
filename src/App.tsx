@@ -54,6 +54,14 @@ export default function App() {
             alias: 'enemy_1',
             src: './assets/enemy_1.png',
           },
+          {
+            alias: 'enemy_hit',
+            src: './assets/enemy_hit.png',
+          },
+          {
+            alias: 'player_hit',
+            src: './assets/player_hit.png',
+          },
         ]);
 
         setAssetsLoaded(true);
