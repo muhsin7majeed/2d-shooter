@@ -10,6 +10,9 @@ import EnemySprite from './sprites/EnemySprite';
 import GameLoop from './components/GameLoop';
 import GameStats from './components/GameStats';
 import DevTools from './components/DevTools';
+import { useSetMissilesAtom } from './atoms/missileAtom';
+import { useSetEnemiesAtom } from './atoms/enemiesAtom';
+import { useSetScoreAtom } from './atoms/scoreAtom';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -22,6 +25,18 @@ export default function App() {
   const [loadingError, setLoadingError] = useState<Error | null>(null);
   const appRef = useRef<ApplicationRef>(null);
   const gameState = useGameStateValue();
+
+  const setMissiles = useSetMissilesAtom();
+  const setEnemies = useSetEnemiesAtom();
+  const setScore = useSetScoreAtom();
+
+  useEffect(() => {
+    if (gameState === 'gameover') {
+      setMissiles([]);
+      setEnemies([]);
+      setScore(0);
+    }
+  }, [gameState, setEnemies, setMissiles, setScore]);
 
   useEffect(() => {
     const loadAssets = async () => {

@@ -5,7 +5,7 @@ import { PADDING } from '../config';
 import { useSetEnemiesAtom } from '../atoms/enemiesAtom';
 
 const SPAWN_INTERVAL = 2000;
-const ENEMY_SPEED = 0.5;
+const ENEMY_SPEED = 2;
 
 const EnemySprite = () => {
   const enemyContainerRef = useRef<Container>(null);
