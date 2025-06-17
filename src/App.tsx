@@ -110,13 +110,12 @@ export default function App() {
 
       {gameState === 'gameover' && <GameOver />}
 
-      {/* We'll wrap our components with an <Application> component to provide the Pixi.js Application context */}
       <Application background={'#1099bb'} resizeTo={window} ref={appRef}>
         <DevTools />
         <JetSprite />
         <EnemySprite />
-        <GameLoop />
         <PowerUpSprite />
+        <GameLoop />
       </Application>
     </>
   );
