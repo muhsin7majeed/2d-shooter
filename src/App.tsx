@@ -1,7 +1,7 @@
 import { Application, extend, ApplicationRef } from '@pixi/react';
 import { Assets, Container, Sprite } from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
-import JetSprite from './sprites/Jet';
+import JetSprite from './sprites/JetSprite';
 import GameLoading from './components/GameLoading';
 import GameMenu from './components/GameMenu';
 import GameOver from './components/GameOver';
@@ -13,6 +13,7 @@ import DevTools from './components/DevTools';
 import { useSetMissilesAtom } from './atoms/missileAtom';
 import { useSetEnemiesAtom } from './atoms/enemiesAtom';
 import { useSetScoreAtom } from './atoms/scoreAtom';
+import PowerUpSprite from './sprites/PowerUpSprite';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -49,6 +50,14 @@ export default function App() {
           {
             alias: 'missile_1',
             src: './assets/missile_1.png',
+          },
+          {
+            alias: 'missile_2',
+            src: './assets/missile_2.png',
+          },
+          {
+            alias: 'missile_3',
+            src: './assets/missile_3.png',
           },
           {
             alias: 'enemy_1',
@@ -107,6 +116,7 @@ export default function App() {
         <JetSprite />
         <EnemySprite />
         <GameLoop />
+        <PowerUpSprite />
       </Application>
     </>
   );

@@ -3,7 +3,7 @@ import { Assets, Container, Sprite } from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
 import useControls from '../hooks/useControls';
 import { PADDING } from '../config';
-import { useSetMissilesAtom } from '../atoms/missileAtom';
+import { useCurrentMissileAtomValue, useSetMissilesAtom } from '../atoms/missileAtom';
 import { useSetPlayerRef } from '../atoms/playerAtom';
 
 const JET_SPEED = 3;
@@ -22,6 +22,7 @@ const JetSprite = () => {
   const missileContainerRef = useRef<Container>(null);
   const setMissiles = useSetMissilesAtom();
   const setPlayerRef = useSetPlayerRef();
+  const currentMissile = useCurrentMissileAtomValue();
 
   const velocityXRef = useRef(0);
 
@@ -67,7 +68,7 @@ const JetSprite = () => {
   const fireMissile = () => {
     if (!jetSpriteRef.current || !missileContainerRef.current) return;
 
-    const missile = new Sprite(Assets.get('missile_1'));
+    const missile = new Sprite(Assets.get(currentMissile));
     missile.anchor.set(0.5);
     missile.x = jetSpriteRef.current.x;
     missile.y = jetSpriteRef.current.y;
