@@ -3,23 +3,23 @@ import { Assets, Container, Sprite } from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
 import useControls from '../hooks/useControls';
 import { PADDING } from '../config';
-import { useCurrentMissileAtomValue, useSetMissilesAtom } from '../atoms/missileAtom';
+import { useCurrentMissileAtomValue, useSetMissilesAtom, useSetMissileContainerRefAtom } from '../atoms/missileAtom';
 import { useSetPlayerRef } from '../atoms/playerAtom';
 
 const JET_SPEED = 3;
-const MISSILE_SPEED = 2;
-const FIRE_INTERVAL = 500; // ms
 const ACCELERATION = 0.5;
 const FRICTION = 0.1;
 
 const JetSprite = () => {
   const jetSpriteRef = useRef<Sprite>(null);
+  const missileContainerRef = useRef<Container>(null);
+
   const { app } = useApplication();
   const { left, right, touchX } = useControls();
 
   const [isFiring] = useState(true);
   const [lastFireTime, setLastFireTime] = useState(0);
-  const missileContainerRef = useRef<Container>(null);
+  const setMissileContainerRef = useSetMissileContainerRefAtom();
   const setMissiles = useSetMissilesAtom();
   const setPlayerRef = useSetPlayerRef();
   const currentMissile = useCurrentMissileAtomValue();
@@ -31,6 +31,12 @@ const JetSprite = () => {
       setPlayerRef(jetSpriteRef.current);
     }
   }, [setPlayerRef]);
+
+  useEffect(() => {
+    if (missileContainerRef) {
+      setMissileContainerRef(missileContainerRef.current);
+    }
+  }, [setMissileContainerRef]);
 
   const controlJet = () => {
     if (!jetSpriteRef.current) return;
@@ -68,13 +74,24 @@ const JetSprite = () => {
   const fireMissile = () => {
     if (!jetSpriteRef.current || !missileContainerRef.current) return;
 
-    const missile = new Sprite(Assets.get(currentMissile));
+    // 1. Create the missile sprite
+    const missile = new Sprite(Assets.get(currentMissile.texture));
     missile.anchor.set(0.5);
+    missile.scale.set(currentMissile.scale);
     missile.x = jetSpriteRef.current.x;
     missile.y = jetSpriteRef.current.y;
 
+    // 2. Add the missile sprite to the missile container
     missileContainerRef.current?.addChild(missile);
-    setMissiles((prev) => [...prev, missile]);
+
+    // 3. Add the missile to the missiles atom
+    setMissiles((prev) => [
+      ...prev,
+      {
+        sprite: missile,
+        data: currentMissile,
+      },
+    ]);
   };
 
   useTick((ticker) => {
@@ -84,7 +101,7 @@ const JetSprite = () => {
 
     if (isFiring) {
       // Auto fire every FIRE_INTERVAL ms
-      if (ticker.lastTime - lastFireTime > FIRE_INTERVAL) {
+      if (ticker.lastTime - lastFireTime > currentMissile.fireInterval) {
         fireMissile();
         setLastFireTime(ticker.lastTime);
       }
@@ -92,10 +109,13 @@ const JetSprite = () => {
 
     setMissiles((prev) =>
       prev.filter((missile) => {
-        missile.y -= MISSILE_SPEED;
-        if (missile.y < -20) {
+        // 1. Move the missile down
+        missile.sprite.y -= missile.data.speed;
+
+        // 2. Remove the missile if it goes off the screen
+        if (missile.sprite.y < -20) {
           // Remove off-screen bullet
-          missileContainerRef.current?.removeChild(missile);
+          missileContainerRef.current?.removeChild(missile.sprite);
           return false;
         }
         return true;

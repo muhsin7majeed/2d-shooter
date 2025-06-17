@@ -26,10 +26,10 @@ const GameLoop = () => {
   useTick(() => {
     enemies.forEach((enemy) => {
       missiles.forEach((missile) => {
-        if (hitCheck(missile, enemy)) {
+        if (hitCheck(missile.sprite, enemy)) {
           // Handle collision
           // 1. Remove the missile
-          missile.parent?.removeChild(missile);
+          missile.sprite.parent?.removeChild(missile.sprite);
           // 2. Remove the enemy
           enemy.parent?.removeChild(enemy);
           // 3. Update the atoms to remove the collided objects

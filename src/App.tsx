@@ -54,10 +54,12 @@ export default function App() {
           {
             alias: 'missile_2',
             src: './assets/missile_2.png',
+            label: 'missile_2',
           },
           {
             alias: 'missile_3',
             src: './assets/missile_3.png',
+            label: 'missile_3',
           },
           {
             alias: 'enemy_1',
