@@ -1,5 +1,6 @@
 import { useSetGameState } from '../atoms/gameStateAtom';
 import { useHighScoreAtomValue, useScoreAtomValue } from '../atoms/scoreAtom';
+import { sound } from '@pixi/sound';
 
 const GameOver = () => {
   const score = useScoreAtomValue();
@@ -8,6 +9,7 @@ const GameOver = () => {
 
   const handleReset = () => {
     setGameState('menu');
+    sound.stopAll();
   };
 
   return (

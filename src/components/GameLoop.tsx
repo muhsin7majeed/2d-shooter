@@ -8,6 +8,8 @@ import { useSetGameState } from '../atoms/gameStateAtom';
 import { Container, Sprite } from 'pixi.js';
 import { Assets } from 'pixi.js';
 import { useRef } from 'react';
+import { sound } from '@pixi/sound';
+import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
 
 const GameLoop = () => {
   const [missiles, setMissiles] = useMissilesAtom();
@@ -22,23 +24,30 @@ const GameLoop = () => {
   const setGameState = useSetGameState();
   const setHighScore = useSetHighScoreAtom();
   const score = useScoreAtomValue();
+  const effectsVolume = useEffectsVolumeAtomValue();
 
   useTick(() => {
     enemies.forEach((enemy) => {
       missiles.forEach((missile) => {
         if (hitCheck(missile.sprite, enemy.sprite)) {
-          // Handle collision
-          // 1. Remove the missile
+          if (effectsVolume) {
+            // Play the enemy hit sound
+            sound.play('enemy_hit_audio', {
+              volume: effectsVolume,
+            });
+          }
+
+          // Remove the missile
           missile.sprite.parent?.removeChild(missile.sprite);
-          // 2. Remove the enemy
+          // Remove the enemy
           enemy.sprite.parent?.removeChild(enemy.sprite);
-          // 3. Update the atoms to remove the collided objects
+          // Update the atoms to remove the collided objects
           setMissiles((prev) => prev.filter((m) => m !== missile));
           setEnemies((prev) => prev.filter((e) => e !== enemy));
 
           setScore((prev) => prev + 1);
 
-          // 4. Add the enemy hit sprite
+          // Add the enemy hit sprite
           const enemyHit = new Sprite(Assets.get('enemy_hit'));
           enemyHit.anchor.set(0.5);
           enemyHit.x = enemy.sprite.x;
@@ -46,7 +55,7 @@ const GameLoop = () => {
           enemyHit.scale.set(2);
           enemyHitContainerRef.current?.addChild(enemyHit);
 
-          // 5. Remove the enemy hit sprite after 1 second
+          // Remove the enemy hit sprite
           setTimeout(() => {
             enemyHit.parent?.removeChild(enemyHit);
           }, 300);
@@ -54,6 +63,13 @@ const GameLoop = () => {
       });
 
       if (playerRef && hitCheck(playerRef, enemy.sprite)) {
+        if (effectsVolume) {
+          // Play the enemy hit sound
+          sound.play('enemy_hit_audio', {
+            volume: effectsVolume,
+          });
+        }
+
         // Handle collision
         // 1. Remove the enemy
         enemy.sprite.parent?.removeChild(enemy.sprite);

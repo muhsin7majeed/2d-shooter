@@ -8,6 +8,13 @@
   align-items: center;
   justify-content: center;
   gap: 20px;
+
+  .controls {
+    label {
+      display: block;
+      margin-bottom: 5px;
+    }
+  }
 }
 
 .game-stats {

@@ -5,6 +5,8 @@ import useControls from '../hooks/useControls';
 import { PADDING } from '../config';
 import { useCurrentMissileAtomValue, useSetMissilesAtom, useSetMissileContainerRefAtom } from '../atoms/missileAtom';
 import { useSetPlayerRef } from '../atoms/playerAtom';
+import { sound } from '@pixi/sound';
+import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
 
 const JET_SPEED = 5;
 const ACCELERATION = 0.2;
@@ -24,6 +26,7 @@ const JetSprite = () => {
   const setMissiles = useSetMissilesAtom();
   const setPlayerRef = useSetPlayerRef();
   const currentMissile = useCurrentMissileAtomValue();
+  const effectsVolume = useEffectsVolumeAtomValue();
 
   const velocityXRef = useRef(0);
   const velocityYRef = useRef(0);
@@ -98,17 +101,24 @@ const JetSprite = () => {
   const fireMissile = () => {
     if (!jetSpriteRef.current || !missileContainerRef.current) return;
 
-    // 1. Create the missile sprite
+    // Create the missile sprite
     const missile = new Sprite(Assets.get(currentMissile.texture));
     missile.anchor.set(0.5);
     missile.scale.set(currentMissile.scale);
     missile.x = jetSpriteRef.current.x;
     missile.y = jetSpriteRef.current.y;
 
-    // 2. Add the missile sprite to the missile container
+    // Add the missile sprite to the missile container
     missileContainerRef.current?.addChild(missile);
 
-    // 3. Add the missile to the missiles atom
+    if (effectsVolume) {
+      // Play the missile sound
+      sound.play(`${currentMissile.label}_audio`, {
+        volume: effectsVolume,
+      });
+    }
+
+    // Add the missile to the missiles atom
     setMissiles((prev) => [
       ...prev,
       {

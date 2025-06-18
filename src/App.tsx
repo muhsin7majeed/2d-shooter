@@ -17,6 +17,7 @@ import PowerUpSprite from './sprites/PowerUpSprite';
 import { MISSILE_TYPES } from './data/missiles';
 import { ENEMY_TYPES } from './data/enemies';
 import { GROUND_OBJECTS } from './data/world';
+import { MUSIC_TRACKS } from './data/gameplay';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -48,6 +49,21 @@ export default function App() {
     const loadAssets = async () => {
       try {
         await Assets.load([
+          {
+            alias: 'enemy_hit_audio',
+            src: './assets/audio/enemy_hit.ogg',
+          },
+
+          ...MUSIC_TRACKS.map((track) => ({
+            alias: track.id,
+            src: `./assets/audio/${track.label}.mp3`,
+          })),
+
+          ...MISSILE_TYPES.map((missile) => ({
+            alias: `${missile.label}_audio`,
+            src: `./assets/audio/${missile.label}.ogg`,
+          })),
+
           {
             alias: 'jet',
             src: './assets/jet.png',
