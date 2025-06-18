@@ -9,13 +9,14 @@ import { useSetPlayerRef } from '../atoms/playerAtom';
 const JET_SPEED = 5;
 const ACCELERATION = 0.2;
 const FRICTION = 0.1;
+const TOUCH_PADDING = 100;
 
 const JetSprite = () => {
   const jetSpriteRef = useRef<Sprite>(null);
   const missileContainerRef = useRef<Container>(null);
 
   const { app } = useApplication();
-  const { left, right, touchX } = useControls();
+  const { left, right, touchX, touchY, up, down } = useControls();
 
   const [isFiring] = useState(true);
   const [lastFireTime, setLastFireTime] = useState(0);
@@ -25,6 +26,7 @@ const JetSprite = () => {
   const currentMissile = useCurrentMissileAtomValue();
 
   const velocityXRef = useRef(0);
+  const velocityYRef = useRef(0);
 
   useEffect(() => {
     if (jetSpriteRef.current) {
@@ -57,8 +59,22 @@ const JetSprite = () => {
       }
     }
 
+    if (up) {
+      velocityYRef.current = Math.max(velocityYRef.current - ACCELERATION, -JET_SPEED);
+    } else if (down) {
+      velocityYRef.current = Math.min(velocityYRef.current + ACCELERATION, JET_SPEED);
+    } else {
+      // Apply friction when no input
+      if (velocityYRef.current > 0) {
+        velocityYRef.current = Math.max(velocityYRef.current - FRICTION, 0);
+      } else if (velocityYRef.current < 0) {
+        velocityYRef.current = Math.min(velocityYRef.current + FRICTION, 0);
+      }
+    }
+
     // Apply movement
     sprite.x += velocityXRef.current;
+    sprite.y += velocityYRef.current;
 
     // Touch input overrides velocity
     if (touchX) {
@@ -66,9 +82,17 @@ const JetSprite = () => {
       velocityXRef.current = 0; // cancel momentum if touch is used
     }
 
+    if (touchY) {
+      sprite.y = touchY - TOUCH_PADDING;
+      velocityYRef.current = 0; // cancel momentum if touch is used
+    }
+
     // Clamp to screen
     const halfWidth = sprite.width / 2;
+    const halfHeight = sprite.height / 2;
+
     sprite.x = Math.max(halfWidth + PADDING, Math.min(app.screen.width - halfWidth - PADDING, sprite.x));
+    sprite.y = Math.max(halfHeight + PADDING, Math.min(app.screen.height - halfHeight - PADDING, sprite.y));
   };
 
   const fireMissile = () => {

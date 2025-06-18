@@ -16,6 +16,7 @@ import { useSetScoreAtom } from './atoms/scoreAtom';
 import PowerUpSprite from './sprites/PowerUpSprite';
 import { MISSILE_TYPES } from './data/missiles';
 import { ENEMY_TYPES } from './data/enemies';
+import { GROUND_OBJECTS } from './data/world';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -57,6 +58,11 @@ export default function App() {
             alias: 'player_hit',
             src: './assets/player_hit.png',
           },
+
+          ...GROUND_OBJECTS.map((ground) => ({
+            alias: ground,
+            src: `./assets/${ground}.png`,
+          })),
 
           ...MISSILE_TYPES.map((missile) => ({
             alias: missile.label,
@@ -107,6 +113,7 @@ export default function App() {
       {gameState === 'gameover' && <GameOver />}
 
       <Application background={'#1099bb'} resizeTo={window} ref={appRef}>
+        {/* <Ground /> */}
         <DevTools />
         <JetSprite />
         <EnemySprite />

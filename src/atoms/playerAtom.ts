@@ -14,3 +14,13 @@ export const usePlayerRef = () => {
 export const useSetPlayerRef = () => {
   return useSetAtom(playerRefAtom);
 };
+
+const playerHealthAtom = atom(100);
+
+export const usePlayerHealth = () => {
+  return useAtomValue(playerHealthAtom);
+};
+
+export const useSetPlayerHealth = () => {
+  return useSetAtom(playerHealthAtom);
+};
