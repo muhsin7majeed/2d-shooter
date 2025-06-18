@@ -10,7 +10,7 @@ import EnemySprite from './sprites/EnemySprite';
 import GameLoop from './components/GameLoop';
 import GameStats from './components/GameStats';
 import DevTools from './components/DevTools';
-import { useSetMissilesAtom } from './atoms/missileAtom';
+import { useSetCurrentMissileAtom, useSetMissilesAtom } from './atoms/missileAtom';
 import { useSetEnemiesAtom } from './atoms/enemiesAtom';
 import { useSetScoreAtom } from './atoms/scoreAtom';
 import PowerUpSprite from './sprites/PowerUpSprite';
@@ -33,14 +33,16 @@ export default function App() {
   const setMissiles = useSetMissilesAtom();
   const setEnemies = useSetEnemiesAtom();
   const setScore = useSetScoreAtom();
+  const setCurrentMissileAtom = useSetCurrentMissileAtom();
 
   useEffect(() => {
     if (gameState === 'gameover') {
       setMissiles([]);
       setEnemies([]);
       setScore(0);
+      setCurrentMissileAtom(MISSILE_TYPES[0]);
     }
-  }, [gameState, setEnemies, setMissiles, setScore]);
+  }, [gameState, setCurrentMissileAtom, setEnemies, setMissiles, setScore]);
 
   useEffect(() => {
     const loadAssets = async () => {
@@ -52,26 +54,26 @@ export default function App() {
           },
           {
             alias: 'enemy_hit',
-            src: './assets/enemy_hit.png',
+            src: './assets/hitmarks/enemy_hit.png',
           },
           {
             alias: 'player_hit',
-            src: './assets/player_hit.png',
+            src: './assets/hitmarks/player_hit.png',
           },
 
           ...GROUND_OBJECTS.map((ground) => ({
             alias: ground,
-            src: `./assets/${ground}.png`,
+            src: `./assets/ground/${ground}.png`,
           })),
 
           ...MISSILE_TYPES.map((missile) => ({
             alias: missile.label,
-            src: `./assets/${missile.texture}.png`,
+            src: `./assets/missiles/${missile.texture}.png`,
           })),
 
           ...ENEMY_TYPES.map((enemy) => ({
             alias: enemy.label,
-            src: `./assets/${enemy.texture}.png`,
+            src: `./assets/enemies/${enemy.texture}.png`,
           })),
         ]);
 

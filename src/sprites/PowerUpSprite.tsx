@@ -23,15 +23,18 @@ const PowerUpSprite = () => {
     const randomMissileType = MISSILE_TYPES.filter((type) => type.label !== 'missile_1')[
       Math.floor(Math.random() * MISSILE_TYPES.length)
     ];
-    const powerUp = new Sprite(Assets.get(randomMissileType.texture));
 
-    powerUp.anchor.set(0.5);
-    powerUp.scale.set(3);
-    powerUp.x = Math.random() * (app.screen.width - PADDING * 2) + PADDING;
-    powerUp.y = -PADDING;
+    if (randomMissileType) {
+      const powerUp = new Sprite(Assets.get(randomMissileType.texture));
 
-    powerUpContainerRef.current?.addChild(powerUp);
-    setPowerUps((prev) => [...prev, { sprite: powerUp, type: randomMissileType }]);
+      powerUp.anchor.set(0.5);
+      powerUp.scale.set(3);
+      powerUp.x = Math.random() * (app.screen.width - PADDING * 2) + PADDING;
+      powerUp.y = -PADDING;
+
+      powerUpContainerRef.current?.addChild(powerUp);
+      setPowerUps((prev) => [...prev, { sprite: powerUp, type: randomMissileType }]);
+    }
   };
 
   useTick((ticker) => {
