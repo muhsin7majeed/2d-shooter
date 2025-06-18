@@ -1,3 +1,9 @@
+import { MissileType } from './missiles';
+
+interface EnemyMissile extends MissileType {
+  label: 'enemy_1_missile_1';
+}
+
 export interface EnemyTypeInterface {
   label: 'enemy_1' | 'enemy_2' | 'enemy_3';
   texture: string;
@@ -5,6 +11,7 @@ export interface EnemyTypeInterface {
   scale: number;
   spawnInterval: number;
   spawnAfterScore: number;
+  missile?: EnemyMissile;
 }
 
 export const ENEMY_TYPES: EnemyTypeInterface[] = [
@@ -19,17 +26,33 @@ export const ENEMY_TYPES: EnemyTypeInterface[] = [
   {
     label: 'enemy_2',
     texture: 'enemy_2',
-    speed: 3,
+    speed: 2.5,
     scale: 2.5,
     spawnInterval: 1000,
     spawnAfterScore: 10,
+    missile: {
+      label: 'enemy_1_missile_1',
+      texture: 'enemy_1_missile_1',
+      speed: 0.5,
+      damage: 1,
+      scale: 1,
+      fireInterval: 1000,
+    },
   },
   {
     label: 'enemy_3',
     texture: 'enemy_3',
-    speed: 5,
-    scale: 3,
+    speed: 3,
+    scale: 2.5,
     spawnInterval: 500,
     spawnAfterScore: 20,
+    missile: {
+      label: 'enemy_1_missile_1',
+      texture: 'enemy_1_missile_1',
+      speed: 0.5,
+      damage: 1,
+      scale: 1,
+      fireInterval: 700,
+    },
   },
 ];

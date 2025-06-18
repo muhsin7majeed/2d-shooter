@@ -75,12 +75,6 @@ const GameLoop = () => {
         enemy.sprite.parent?.removeChild(enemy.sprite);
         // 2. Update the atoms to remove the collided objects
         setEnemies((prev) => prev.filter((e) => e !== enemy));
-        setGameState('gameover');
-        setHighScore((prev) => {
-          console.log(prev, score);
-
-          return prev < score ? score : prev;
-        });
 
         // 3. Add the player hit sprite
         const playerHit = new Sprite(Assets.get('player_hit'));
@@ -89,6 +83,11 @@ const GameLoop = () => {
         playerHit.y = playerRef.y;
         playerHit.scale.set(4);
         playerHitContainerRef.current?.addChild(playerHit);
+
+        setGameState('gameover');
+        setHighScore((prev) => {
+          return prev < score ? score : prev;
+        });
 
         // 4. Remove the player hit sprite after 1 second
         setTimeout(() => {

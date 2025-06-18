@@ -1,10 +1,13 @@
-export interface MissileTypeInterface {
-  label: 'missile_1' | 'missile_2' | 'missile_3';
+export interface MissileType {
   texture: string;
   speed: number;
   damage: number;
   scale: number;
   fireInterval: number;
+}
+
+export interface MissileTypeInterface extends MissileType {
+  label: 'missile_1' | 'missile_2' | 'missile_3';
 }
 
 export const MISSILE_TYPES: MissileTypeInterface[] = [
@@ -19,17 +22,17 @@ export const MISSILE_TYPES: MissileTypeInterface[] = [
   {
     label: 'missile_2',
     texture: 'missile_2',
-    speed: 10,
+    speed: 7,
     damage: 2,
     scale: 1.2,
-    fireInterval: 100,
+    fireInterval: 300,
   },
   {
     label: 'missile_3',
     texture: 'missile_3',
-    speed: 6,
+    speed: 5,
     damage: 3,
     scale: 1.5,
-    fireInterval: 300,
+    fireInterval: 400,
   },
 ];

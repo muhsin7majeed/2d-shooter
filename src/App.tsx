@@ -91,6 +91,11 @@ export default function App() {
             alias: enemy.label,
             src: `./assets/enemies/${enemy.texture}.png`,
           })),
+
+          ...ENEMY_TYPES.filter((enemy) => enemy.missile).map((enemy) => ({
+            alias: enemy.missile!.label,
+            src: `./assets/missiles/${enemy.missile!.texture}.png`,
+          })),
         ]);
 
         setAssetsLoaded(true);
