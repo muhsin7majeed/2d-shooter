@@ -13,7 +13,7 @@ const ACCELERATION = 0.2;
 const FRICTION = 0.1;
 const TOUCH_PADDING = 100;
 
-const JetSprite = () => {
+const PlayerSprite = () => {
   const jetSpriteRef = useRef<Sprite>(null);
   const missileContainerRef = useRef<Container>(null);
 
@@ -88,7 +88,10 @@ const JetSprite = () => {
     const halfHeight = sprite.height / 2;
 
     sprite.x = Math.max(halfWidth + SCREEN_PADDING, Math.min(app.screen.width - halfWidth - SCREEN_PADDING, sprite.x));
-    sprite.y = Math.max(halfHeight + SCREEN_PADDING, Math.min(app.screen.height - halfHeight - SCREEN_PADDING, sprite.y));
+    sprite.y = Math.max(
+      halfHeight + SCREEN_PADDING,
+      Math.min(app.screen.height - halfHeight - SCREEN_PADDING, sprite.y),
+    );
   };
 
   const fireMissile = () => {
@@ -165,4 +168,4 @@ const JetSprite = () => {
   );
 };
 
-export default JetSprite;
+export default PlayerSprite;

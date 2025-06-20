@@ -1,7 +1,7 @@
 import { Application, extend, ApplicationRef } from '@pixi/react';
 import { Assets, Container, Sprite } from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
-import JetSprite from './sprites/JetSprite';
+import JetSprite from './sprites/PlayerSprite';
 import GameLoading from './components/GameLoading';
 import GameMenu from './components/GameMenu';
 import GameOver from './components/GameOver';
