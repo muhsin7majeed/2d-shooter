@@ -34,14 +34,14 @@ export const MISSILE_TYPES: {
       speed: 0.5,
       damage: 15,
       scale: 1,
-      fireInterval: 1000,
+      fireInterval: 2000,
     },
     {
       name: 'enemy_1_missile_1',
       speed: 0.5,
       damage: 20,
       scale: 1,
-      fireInterval: 700,
+      fireInterval: 1000,
     },
   ],
 } as const;

@@ -88,23 +88,51 @@ const GameLoop = () => {
   const handlePlayerMissileHitEnemy = (enemy: RenderedEnemy) => {
     renderedPlayerMissiles.forEach((missile) => {
       if (hasSpriteCollided(missile.sprite, enemy.sprite)) {
-        playSound('enemy_destroyed_audio');
-
         // Remove the missile
         missile.sprite.parent?.removeChild(missile.sprite);
 
-        // Remove the enemy
-        enemy.sprite.parent?.removeChild(enemy.sprite);
-
         // Update the atoms to remove the collided objects
         setRenderedPlayerMissiles((prev) => prev.filter((m) => m !== missile));
-        setRenderedEnemies((prev) => prev.filter((e) => e !== enemy));
 
-        // Update the score
-        setScore((prev) => prev + 1);
+        // Check if the enemy health is greater than the missile damage
+        if (enemy.data.health > missile.data.damage) {
+          playSound('player_hit_audio');
 
-        // Add the enemy hit sprite
-        renderHitEffect('enemy_hit', enemy.sprite.x, enemy.sprite.y);
+          renderHitEffect('player_hit', enemy.sprite.x, enemy.sprite.y, 2, 200);
+
+          // Update the enemy health
+          setRenderedEnemies((prev) => {
+            return prev.map((e) => {
+              const damage = (e.data.health * missile.data.damage) / 100;
+
+              return e === enemy
+                ? {
+                    ...e,
+                    data: {
+                      ...e.data,
+                      health: e.data.health - damage,
+                    },
+                  }
+                : e;
+            });
+          });
+        } else {
+          playSound('enemy_destroyed_audio');
+
+          // Remove the missile
+          missile.sprite.parent?.removeChild(missile.sprite);
+
+          // Remove the enemy
+          enemy.sprite.parent?.removeChild(enemy.sprite);
+
+          setRenderedEnemies((prev) => prev.filter((e) => e !== enemy));
+
+          // Update the score
+          setScore((prev) => prev + 1);
+
+          // Add the enemy hit sprite
+          renderHitEffect('enemy_hit', enemy.sprite.x, enemy.sprite.y);
+        }
       }
     });
   };
