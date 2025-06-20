@@ -4,31 +4,30 @@ import { useEffect, useRef, useState } from 'react';
 import useControls from '../hooks/useControls';
 import { SCREEN_PADDING } from '../config';
 import { useCurrentPlayerMissileAtomValue, useSetRenderedPlayerMissilesAtom } from '../atoms/missileAtom';
-import { useSetPlayerRef } from '../atoms/playerAtom';
+import { useCurrentPlayerJetAtomValue, useSetPlayerRef } from '../atoms/playerAtom';
 import { sound } from '@pixi/sound';
 import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
 
-const JET_SPEED = 5;
-const ACCELERATION = 0.2;
 const FRICTION = 0.1;
 const TOUCH_PADDING = 100;
 
 const PlayerSprite = () => {
   const jetSpriteRef = useRef<Sprite>(null);
   const missileContainerRef = useRef<Container>(null);
+  const velocityXRef = useRef(0);
+  const velocityYRef = useRef(0);
 
   const { app } = useApplication();
-  const { left, right, touchX, touchY, up, down } = useControls();
 
   const [isFiring] = useState(true);
   const [lastFireTime, setLastFireTime] = useState(0);
-  const setRenderedPlayerMissiles = useSetRenderedPlayerMissilesAtom();
-  const setPlayerRef = useSetPlayerRef();
+  const { left, right, touchX, touchY, up, down } = useControls();
   const currentPlayerMissile = useCurrentPlayerMissileAtomValue();
   const effectsVolume = useEffectsVolumeAtomValue();
+  const currentPlayerJet = useCurrentPlayerJetAtomValue();
 
-  const velocityXRef = useRef(0);
-  const velocityYRef = useRef(0);
+  const setRenderedPlayerMissiles = useSetRenderedPlayerMissilesAtom();
+  const setPlayerRef = useSetPlayerRef();
 
   useEffect(() => {
     if (jetSpriteRef.current) {
@@ -37,15 +36,17 @@ const PlayerSprite = () => {
   }, [setPlayerRef]);
 
   const controlJet = () => {
-    if (!jetSpriteRef.current) return;
+    if (!jetSpriteRef.current || !currentPlayerJet) return;
 
     const sprite = jetSpriteRef.current;
+    const jetSpeed = currentPlayerJet.speed;
+    const acceleration = currentPlayerJet.acceleration;
 
     // Apply input to change velocity
     if (left) {
-      velocityXRef.current = Math.max(velocityXRef.current - ACCELERATION, -JET_SPEED);
+      velocityXRef.current = Math.max(velocityXRef.current - acceleration, -jetSpeed);
     } else if (right) {
-      velocityXRef.current = Math.min(velocityXRef.current + ACCELERATION, JET_SPEED);
+      velocityXRef.current = Math.min(velocityXRef.current + acceleration, jetSpeed);
     } else {
       // Apply friction when no input
       if (velocityXRef.current > 0) {
@@ -56,9 +57,9 @@ const PlayerSprite = () => {
     }
 
     if (up) {
-      velocityYRef.current = Math.max(velocityYRef.current - ACCELERATION, -JET_SPEED);
+      velocityYRef.current = Math.max(velocityYRef.current - acceleration, -jetSpeed);
     } else if (down) {
-      velocityYRef.current = Math.min(velocityYRef.current + ACCELERATION, JET_SPEED);
+      velocityYRef.current = Math.min(velocityYRef.current + acceleration, jetSpeed);
     } else {
       // Apply friction when no input
       if (velocityYRef.current > 0) {
@@ -157,7 +158,8 @@ const PlayerSprite = () => {
     <>
       <pixiSprite
         ref={jetSpriteRef}
-        texture={Assets.get('player_jet_1')}
+        texture={Assets.get(currentPlayerJet.name)}
+        scale={currentPlayerJet.scale}
         anchor={0.5}
         x={app.screen.width / 2}
         y={app.screen.height - (app.screen.height * 10) / 100}

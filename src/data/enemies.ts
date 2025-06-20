@@ -1,4 +1,4 @@
-import { EnemyJetTypeInterface } from '../types/jet';
+import { EnemyJetTypeInterface } from '../types/player';
 import { MISSILE_TYPES } from './missiles';
 
 export const ENEMY_TYPES: EnemyJetTypeInterface[] = [

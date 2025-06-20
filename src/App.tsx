@@ -14,7 +14,7 @@ import PowerUpSprite from './sprites/PowerUpSprite';
 import { MISSILE_TYPES } from './data/missiles';
 import { ENEMY_TYPES } from './data/enemies';
 import { MUSIC_TRACKS } from './data/gameplay';
-import { PlayerJets } from './data/player';
+import { PLAYER_JETS } from './data/player';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -55,7 +55,7 @@ export default function App() {
             src: `./assets/audio/${missile.name}.ogg`,
           })),
 
-          ...PlayerJets.map((jet) => ({
+          ...PLAYER_JETS.map((jet) => ({
             alias: jet.name,
             src: `./assets/player_jets/${jet.name}.png`,
           })),

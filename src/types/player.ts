@@ -1,14 +1,9 @@
 import { Sprite } from 'pixi.js';
+import { JetTypeInterface, MissileType } from './common';
 
-export interface MissileType {
-  speed: number;
-  damage: number;
-  scale: number;
-  fireInterval: number;
-}
-
-export interface EnemyMissileType extends MissileType {
-  name: 'enemy_1_missile_1';
+export interface PlayerJetTypeInterface extends JetTypeInterface {
+  name: 'player_jet_1';
+  acceleration: number;
 }
 
 export interface PlayerMissileType extends MissileType {

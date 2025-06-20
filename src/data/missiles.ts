@@ -1,4 +1,5 @@
-import { EnemyMissileType, PlayerMissileType } from '../types/missile';
+import { EnemyMissileType } from '../types/enemy';
+import { PlayerMissileType } from '../types/player';
 
 export const MISSILE_TYPES: {
   Player: PlayerMissileType[];
