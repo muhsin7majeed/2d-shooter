@@ -14,3 +14,8 @@ export interface RenderedPlayerMissile {
   sprite: Sprite;
   data: PlayerMissileType;
 }
+
+export interface RenderedPowerUp {
+  sprite: Sprite;
+  type: PlayerMissileType;
+}

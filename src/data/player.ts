@@ -6,5 +6,6 @@ export const PLAYER_JETS: PlayerJetTypeInterface[] = [
     speed: 5,
     scale: 1,
     acceleration: 0.2,
+    health: 100,
   },
 ] as const;

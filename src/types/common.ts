@@ -1,6 +1,7 @@
 export interface JetTypeInterface {
   speed: number;
   scale: number;
+  health: number;
 }
 
 export interface MissileType {

@@ -1,39 +1,35 @@
 import { useApplication, useTick } from '@pixi/react';
 import { Assets, Container, Sprite } from 'pixi.js';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { SCREEN_PADDING } from '../config';
-import { useSetRenderedEnemiesAtom } from '../atoms/enemiesAtom';
-import { useScoreAtomValue, useSetHighScoreAtom } from '../atoms/scoreAtom';
+import {
+  useSetEnemyMissileContainerRefAtom,
+  useSetRenderedEnemiesAtom,
+  useSetRenderedEnemyMissilesAtom,
+} from '../atoms/enemiesAtom';
+import { useScoreAtomValue } from '../atoms/scoreAtom';
 import { getEnemyBasedOnScore } from '../helpers/getEnemyBasedOnScore';
 import { usePlayerRef } from '../atoms/playerAtom';
-import useHitCheck from '../hooks/useHitCheck';
-import { sound } from '@pixi/sound';
-import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
-import { useSetGameState } from '../atoms/gameStateAtom';
 import { RenderedEnemy } from '../types/enemy';
-
-interface EnemyMissile {
-  sprite: Sprite;
-  data: {
-    velocityX: number;
-    velocityY: number;
-  };
-}
 
 const EnemySprite = () => {
   const enemyContainerRef = useRef<Container>(null);
   const setRenderedEnemies = useSetRenderedEnemiesAtom();
   const score = useScoreAtomValue();
-  const [enemyMissiles, setEnemyMissiles] = useState<EnemyMissile[]>([]);
+  const setRenderedEnemyMissiles = useSetRenderedEnemyMissilesAtom();
   const enemyMissileContainerRef = useRef<Container>(null);
   const playerRef = usePlayerRef();
-  const hitCheck = useHitCheck();
-  const setGameState = useSetGameState();
-  const setHighScore = useSetHighScoreAtom();
-  const effectsVolume = useEffectsVolumeAtomValue();
   const [lastSpawnTime, setLastSpawnTime] = useState(0);
   const [lastMissileSpawnTime, setLastMissileSpawnTime] = useState(0);
   const { app } = useApplication();
+
+  const setEnemyMissileContainerRef = useSetEnemyMissileContainerRefAtom();
+
+  useEffect(() => {
+    if (enemyMissileContainerRef.current) {
+      setEnemyMissileContainerRef(enemyMissileContainerRef.current);
+    }
+  }, [setEnemyMissileContainerRef, enemyMissileContainerRef]);
 
   const fireMissile = (enemy: RenderedEnemy) => {
     if (!enemy.data.missile || !playerRef) return;
@@ -52,7 +48,7 @@ const EnemySprite = () => {
     const deltaYToTarget = playerRef.y - enemy.sprite.y;
     const length = Math.sqrt(deltaXToTarget * deltaXToTarget + deltaYToTarget * deltaYToTarget);
 
-    setEnemyMissiles((prev) => [
+    setRenderedEnemyMissiles((prev) => [
       ...prev,
       {
         sprite: missile,
@@ -106,47 +102,21 @@ const EnemySprite = () => {
     );
 
     // Remove off-screen missiles
-    enemyMissiles.forEach((missile) => {
-      // move the missile towards the player
-      missile.sprite.x += missile.data.velocityX;
-      missile.sprite.y += missile.data.velocityY;
+    setRenderedEnemyMissiles((prev) =>
+      prev.filter((missile) => {
+        // move the missile towards the player
+        missile.sprite.x += missile.data.velocityX;
+        missile.sprite.y += missile.data.velocityY;
 
-      // check if the missile is colliding with the player
-      if (playerRef && hitCheck(missile.sprite, playerRef)) {
-        if (effectsVolume) {
-          // Play the enemy hit sound
-          sound.play('enemy_hit_audio', {
-            volume: effectsVolume,
-          });
+        if (missile.sprite.y > app.screen.height) {
+          missile.sprite.parent?.removeChild(missile.sprite);
+
+          return false;
         }
 
-        // Remove the missile
-        missile.sprite.parent?.removeChild(missile.sprite);
-        setEnemyMissiles((prev) => prev.filter((m) => m !== missile));
-
-        // Show hit effect
-        const playerHit = new Sprite(Assets.get('player_hit'));
-        playerHit.anchor.set(0.5);
-        playerHit.x = playerRef.x;
-        playerHit.y = playerRef.y;
-        playerHit.scale.set(4);
-        enemyMissileContainerRef.current?.addChild(playerHit);
-
-        setGameState('gameover');
-        setHighScore((prev) => {
-          return prev < score ? score : prev;
-        });
-
-        // Remove the player hit sprite after 1 second
-        setTimeout(() => {
-          playerHit.parent?.removeChild(playerHit);
-        }, 300);
-      }
-
-      if (missile.sprite.y > app.screen.height) {
-        missile.sprite.parent?.removeChild(missile.sprite);
-      }
-    });
+        return true;
+      }),
+    );
   });
 
   return (

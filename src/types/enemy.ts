@@ -6,6 +6,14 @@ export interface RenderedEnemy {
   data: EnemyJetTypeInterface;
 }
 
+export interface RenderedEnemyMissile {
+  sprite: Sprite;
+  data: {
+    velocityX: number;
+    velocityY: number;
+  };
+}
+
 export interface EnemyJetTypeInterface extends JetTypeInterface {
   name: 'enemy_1' | 'enemy_2' | 'enemy_3';
   spawnInterval: number;

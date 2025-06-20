@@ -1,9 +1,11 @@
 import { useScoreAtomValue } from '../atoms/scoreAtom';
 import { useGameStateAtom } from '../atoms/gameStateAtom';
+import { usePlayerHealth } from '../atoms/playerAtom';
 
 const GameStats = () => {
   const score = useScoreAtomValue();
   const [gameState, setGameState] = useGameStateAtom();
+  const health = usePlayerHealth();
 
   const handlePause = () => {
     if (gameState === 'paused') {
@@ -20,6 +22,7 @@ const GameStats = () => {
         {gameState === 'paused' && <button onClick={handlePause}>Play</button>}
 
         <div className="game-stats-score">Score: {score}</div>
+        <div className="game-stats-score">Health: {health}</div>
       </div>
     </div>
   );
