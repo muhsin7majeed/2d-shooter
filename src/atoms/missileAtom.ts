@@ -1,6 +1,6 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { MISSILE_TYPES } from '../data/missiles';
-import { PlayerMissileType, RenderedPlayerMissile } from '../types/missile';
+import { PlayerMissileType, RenderedPlayerMissile } from '../types/player';
 
 const renderedPlayerMissileAtoms = atom<RenderedPlayerMissile[]>([]);
 
