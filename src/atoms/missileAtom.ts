@@ -1,26 +1,15 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { Container, Sprite } from 'pixi.js';
-import { MISSILE_TYPES, MissileTypeInterface } from '../data/missiles';
+import { MISSILE_TYPES } from '../data/missiles';
+import { PlayerMissileType, RenderedPlayerMissile } from '../types/missile';
 
-export interface Missile {
-  sprite: Sprite;
-  data: MissileTypeInterface;
-}
+const renderedPlayerMissileAtoms = atom<RenderedPlayerMissile[]>([]);
 
-const missilesAtom = atom<Missile[]>([]);
+export const useRenderedPlayerMissilesAtom = () => useAtom(renderedPlayerMissileAtoms);
+export const useRenderedPlayerMissilesAtomValue = () => useAtomValue(renderedPlayerMissileAtoms);
+export const useSetRenderedPlayerMissilesAtom = () => useSetAtom(renderedPlayerMissileAtoms);
 
-export const useSetMissilesAtom = () => useSetAtom(missilesAtom);
-export const useMissilesAtom = () => useAtom(missilesAtom);
-export const useMissileAtomValue = () => useAtomValue(missilesAtom);
+const currentPlayerMissileAtom = atom<PlayerMissileType>(MISSILE_TYPES.Player[0]);
 
-const currentMissileAtom = atom<MissileTypeInterface>(MISSILE_TYPES[0]);
-
-export const useSetCurrentMissileAtom = () => useSetAtom(currentMissileAtom);
-export const useCurrentMissileAtom = () => useAtom(currentMissileAtom);
-export const useCurrentMissileAtomValue = () => useAtomValue(currentMissileAtom);
-
-const missileContainerRefAtom = atom<Container | null>(null);
-
-export const useSetMissileContainerRefAtom = () => useSetAtom(missileContainerRefAtom);
-export const useMissileContainerRefAtom = () => useAtom(missileContainerRefAtom);
-export const useMissileContainerRefAtomValue = () => useAtomValue(missileContainerRefAtom);
+export const useCurrentPlayerMissileAtom = () => useAtom(currentPlayerMissileAtom);
+export const useCurrentPlayerMissileAtomValue = () => useAtomValue(currentPlayerMissileAtom);
+export const useSetCurrentPlayerMissileAtom = () => useSetAtom(currentPlayerMissileAtom);

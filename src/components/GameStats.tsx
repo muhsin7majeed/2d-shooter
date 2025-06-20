@@ -18,6 +18,7 @@ const GameStats = () => {
       <div className="content">
         {gameState === 'playing' && <button onClick={handlePause}>Pause</button>}
         {gameState === 'paused' && <button onClick={handlePause}>Play</button>}
+
         <div className="game-stats-score">Score: {score}</div>
       </div>
     </div>

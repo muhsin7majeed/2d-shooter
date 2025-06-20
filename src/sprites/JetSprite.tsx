@@ -2,8 +2,8 @@ import { useApplication, useTick } from '@pixi/react';
 import { Assets, Container, Sprite } from 'pixi.js';
 import { useEffect, useRef, useState } from 'react';
 import useControls from '../hooks/useControls';
-import { PADDING } from '../config';
-import { useCurrentMissileAtomValue, useSetMissilesAtom, useSetMissileContainerRefAtom } from '../atoms/missileAtom';
+import { SCREEN_PADDING } from '../config';
+import { useCurrentPlayerMissileAtomValue, useSetRenderedPlayerMissilesAtom } from '../atoms/missileAtom';
 import { useSetPlayerRef } from '../atoms/playerAtom';
 import { sound } from '@pixi/sound';
 import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
@@ -22,10 +22,9 @@ const JetSprite = () => {
 
   const [isFiring] = useState(true);
   const [lastFireTime, setLastFireTime] = useState(0);
-  const setMissileContainerRef = useSetMissileContainerRefAtom();
-  const setMissiles = useSetMissilesAtom();
+  const setRenderedPlayerMissiles = useSetRenderedPlayerMissilesAtom();
   const setPlayerRef = useSetPlayerRef();
-  const currentMissile = useCurrentMissileAtomValue();
+  const currentPlayerMissile = useCurrentPlayerMissileAtomValue();
   const effectsVolume = useEffectsVolumeAtomValue();
 
   const velocityXRef = useRef(0);
@@ -36,12 +35,6 @@ const JetSprite = () => {
       setPlayerRef(jetSpriteRef.current);
     }
   }, [setPlayerRef]);
-
-  useEffect(() => {
-    if (missileContainerRef) {
-      setMissileContainerRef(missileContainerRef.current);
-    }
-  }, [setMissileContainerRef]);
 
   const controlJet = () => {
     if (!jetSpriteRef.current) return;
@@ -94,17 +87,17 @@ const JetSprite = () => {
     const halfWidth = sprite.width / 2;
     const halfHeight = sprite.height / 2;
 
-    sprite.x = Math.max(halfWidth + PADDING, Math.min(app.screen.width - halfWidth - PADDING, sprite.x));
-    sprite.y = Math.max(halfHeight + PADDING, Math.min(app.screen.height - halfHeight - PADDING, sprite.y));
+    sprite.x = Math.max(halfWidth + SCREEN_PADDING, Math.min(app.screen.width - halfWidth - SCREEN_PADDING, sprite.x));
+    sprite.y = Math.max(halfHeight + SCREEN_PADDING, Math.min(app.screen.height - halfHeight - SCREEN_PADDING, sprite.y));
   };
 
   const fireMissile = () => {
     if (!jetSpriteRef.current || !missileContainerRef.current) return;
 
     // Create the missile sprite
-    const missile = new Sprite(Assets.get(currentMissile.texture));
+    const missile = new Sprite(Assets.get(currentPlayerMissile.name));
     missile.anchor.set(0.5);
-    missile.scale.set(currentMissile.scale);
+    missile.scale.set(currentPlayerMissile.scale);
     missile.x = jetSpriteRef.current.x;
     missile.y = jetSpriteRef.current.y;
 
@@ -113,17 +106,17 @@ const JetSprite = () => {
 
     if (effectsVolume) {
       // Play the missile sound
-      sound.play(`${currentMissile.label}_audio`, {
+      sound.play(`${currentPlayerMissile.name}_audio`, {
         volume: effectsVolume,
       });
     }
 
     // Add the missile to the missiles atom
-    setMissiles((prev) => [
+    setRenderedPlayerMissiles((prev) => [
       ...prev,
       {
         sprite: missile,
-        data: currentMissile,
+        data: currentPlayerMissile,
       },
     ]);
   };
@@ -135,13 +128,13 @@ const JetSprite = () => {
 
     if (isFiring) {
       // Auto fire every FIRE_INTERVAL ms
-      if (ticker.lastTime - lastFireTime > currentMissile.fireInterval) {
+      if (ticker.lastTime - lastFireTime > currentPlayerMissile.fireInterval) {
         fireMissile();
         setLastFireTime(ticker.lastTime);
       }
     }
 
-    setMissiles((prev) =>
+    setRenderedPlayerMissiles((prev) =>
       prev.filter((missile) => {
         // 1. Move the missile down
         missile.sprite.y -= missile.data.speed;
@@ -161,10 +154,10 @@ const JetSprite = () => {
     <>
       <pixiSprite
         ref={jetSpriteRef}
-        texture={Assets.get('jet')}
+        texture={Assets.get('player_jet_1')}
         anchor={0.5}
         x={app.screen.width / 2}
-        y={app.screen.height - 100}
+        y={app.screen.height - (app.screen.height * 10) / 100}
       />
 
       <pixiContainer ref={missileContainerRef} />

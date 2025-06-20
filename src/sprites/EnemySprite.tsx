@@ -1,8 +1,8 @@
 import { useApplication, useTick } from '@pixi/react';
 import { Assets, Container, Sprite } from 'pixi.js';
 import { useRef, useState } from 'react';
-import { PADDING } from '../config';
-import { Enemy, useSetEnemiesAtom } from '../atoms/enemiesAtom';
+import { SCREEN_PADDING } from '../config';
+import { useSetRenderedEnemiesAtom } from '../atoms/enemiesAtom';
 import { useScoreAtomValue, useSetHighScoreAtom } from '../atoms/scoreAtom';
 import { getEnemyBasedOnScore } from '../helpers/getEnemyBasedOnScore';
 import { usePlayerRef } from '../atoms/playerAtom';
@@ -10,6 +10,7 @@ import useHitCheck from '../hooks/useHitCheck';
 import { sound } from '@pixi/sound';
 import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
 import { useSetGameState } from '../atoms/gameStateAtom';
+import { RenderedEnemy } from '../types/enemy';
 
 interface EnemyMissile {
   sprite: Sprite;
@@ -21,7 +22,7 @@ interface EnemyMissile {
 
 const EnemySprite = () => {
   const enemyContainerRef = useRef<Container>(null);
-  const setEnemies = useSetEnemiesAtom();
+  const setRenderedEnemies = useSetRenderedEnemiesAtom();
   const score = useScoreAtomValue();
   const [enemyMissiles, setEnemyMissiles] = useState<EnemyMissile[]>([]);
   const enemyMissileContainerRef = useRef<Container>(null);
@@ -34,10 +35,10 @@ const EnemySprite = () => {
   const [lastMissileSpawnTime, setLastMissileSpawnTime] = useState(0);
   const { app } = useApplication();
 
-  const fireMissile = (enemy: Enemy) => {
+  const fireMissile = (enemy: RenderedEnemy) => {
     if (!enemy.data.missile || !playerRef) return;
 
-    const missile = new Sprite(Assets.get(enemy.data.missile.texture));
+    const missile = new Sprite(Assets.get(enemy.data.missile.name));
 
     missile.anchor.set(0.5);
     missile.x = enemy.sprite.x;
@@ -66,15 +67,15 @@ const EnemySprite = () => {
   const spawnRandomEnemy = () => {
     const enemyType = getEnemyBasedOnScore(score);
 
-    const enemy = new Sprite(Assets.get(enemyType.texture));
+    const enemy = new Sprite(Assets.get(enemyType.name));
     enemy.anchor.set(0.5);
     enemy.scale.set(enemyType.scale);
     enemy.rotation = Math.PI;
-    enemy.x = Math.random() * (app.screen.width - PADDING * 2) + PADDING;
-    enemy.y = -PADDING;
+    enemy.x = Math.random() * (app.screen.width - SCREEN_PADDING * 2) + SCREEN_PADDING;
+    enemy.y = -SCREEN_PADDING;
     enemyContainerRef.current?.addChild(enemy);
 
-    setEnemies((prev) => [...prev, { sprite: enemy, data: enemyType }]);
+    setRenderedEnemies((prev) => [...prev, { sprite: enemy, data: enemyType }]);
   };
 
   useTick((ticker) => {
@@ -85,7 +86,7 @@ const EnemySprite = () => {
       setLastSpawnTime(ticker.lastTime);
     }
 
-    setEnemies((prev) =>
+    setRenderedEnemies((prev) =>
       prev.filter((enemy) => {
         enemy.sprite.y += enemy.data.speed;
 

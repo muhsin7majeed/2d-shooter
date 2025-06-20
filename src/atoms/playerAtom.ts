@@ -24,3 +24,13 @@ export const usePlayerHealth = () => {
 export const useSetPlayerHealth = () => {
   return useSetAtom(playerHealthAtom);
 };
+
+const currentPlayerJetAtom = atom<{ sprite: Sprite; data: { score: number } } | null>(null);
+
+export const useCurrentPlayerJetAtomValue = () => {
+  return useAtomValue(currentPlayerJetAtom);
+};
+
+export const useSetCurrentPlayerJetAtom = () => {
+  return useSetAtom(currentPlayerJetAtom);
+};

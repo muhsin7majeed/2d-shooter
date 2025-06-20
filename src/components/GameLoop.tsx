@@ -1,6 +1,6 @@
 import { useTick } from '@pixi/react';
 import { useEnemiesAtom } from '../atoms/enemiesAtom';
-import { useMissilesAtom } from '../atoms/missileAtom';
+import { useRenderedPlayerMissilesAtom } from '../atoms/missileAtom';
 import useHitCheck from '../hooks/useHitCheck';
 import { useScoreAtomValue, useSetHighScoreAtom, useSetScoreAtom } from '../atoms/scoreAtom';
 import { usePlayerRef } from '../atoms/playerAtom';
@@ -12,7 +12,7 @@ import { sound } from '@pixi/sound';
 import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
 
 const GameLoop = () => {
-  const [missiles, setMissiles] = useMissilesAtom();
+  const [renderedPlayerMissiles, setRenderedPlayerMissiles] = useRenderedPlayerMissilesAtom();
   const [enemies, setEnemies] = useEnemiesAtom();
 
   const enemyHitContainerRef = useRef<Container>(null);
@@ -28,7 +28,7 @@ const GameLoop = () => {
 
   useTick(() => {
     enemies.forEach((enemy) => {
-      missiles.forEach((missile) => {
+      renderedPlayerMissiles.forEach((missile) => {
         if (hitCheck(missile.sprite, enemy.sprite)) {
           if (effectsVolume) {
             // Play the enemy hit sound
@@ -42,7 +42,7 @@ const GameLoop = () => {
           // Remove the enemy
           enemy.sprite.parent?.removeChild(enemy.sprite);
           // Update the atoms to remove the collided objects
-          setMissiles((prev) => prev.filter((m) => m !== missile));
+          setRenderedPlayerMissiles((prev) => prev.filter((m) => m !== missile));
           setEnemies((prev) => prev.filter((e) => e !== enemy));
 
           setScore((prev) => prev + 1);

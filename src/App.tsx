@@ -10,14 +10,11 @@ import EnemySprite from './sprites/EnemySprite';
 import GameLoop from './components/GameLoop';
 import GameStats from './components/GameStats';
 import DevTools from './components/DevTools';
-import { useSetCurrentMissileAtom, useSetMissilesAtom } from './atoms/missileAtom';
-import { useSetEnemiesAtom } from './atoms/enemiesAtom';
-import { useSetScoreAtom } from './atoms/scoreAtom';
 import PowerUpSprite from './sprites/PowerUpSprite';
 import { MISSILE_TYPES } from './data/missiles';
 import { ENEMY_TYPES } from './data/enemies';
-import { GROUND_OBJECTS } from './data/world';
 import { MUSIC_TRACKS } from './data/gameplay';
+import { PlayerJets } from './data/player';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -31,20 +28,6 @@ export default function App() {
   const appRef = useRef<ApplicationRef>(null);
   const gameState = useGameStateValue();
 
-  const setMissiles = useSetMissilesAtom();
-  const setEnemies = useSetEnemiesAtom();
-  const setScore = useSetScoreAtom();
-  const setCurrentMissileAtom = useSetCurrentMissileAtom();
-
-  useEffect(() => {
-    if (gameState === 'gameover') {
-      setMissiles([]);
-      setEnemies([]);
-      setScore(0);
-      setCurrentMissileAtom(MISSILE_TYPES[0]);
-    }
-  }, [gameState, setCurrentMissileAtom, setEnemies, setMissiles, setScore]);
-
   useEffect(() => {
     const loadAssets = async () => {
       try {
@@ -52,21 +35,6 @@ export default function App() {
           {
             alias: 'enemy_hit_audio',
             src: './assets/audio/enemy_hit.ogg',
-          },
-
-          ...MUSIC_TRACKS.map((track) => ({
-            alias: track.id,
-            src: `./assets/audio/${track.label}.mp3`,
-          })),
-
-          ...MISSILE_TYPES.map((missile) => ({
-            alias: `${missile.label}_audio`,
-            src: `./assets/audio/${missile.label}.ogg`,
-          })),
-
-          {
-            alias: 'jet',
-            src: './assets/jet.png',
           },
           {
             alias: 'enemy_hit',
@@ -77,24 +45,39 @@ export default function App() {
             src: './assets/hitmarks/player_hit.png',
           },
 
-          ...GROUND_OBJECTS.map((ground) => ({
-            alias: ground,
-            src: `./assets/ground/${ground}.png`,
+          ...MUSIC_TRACKS.map((track) => ({
+            alias: track.id,
+            src: `./assets/audio/${track.label}.mp3`,
           })),
 
-          ...MISSILE_TYPES.map((missile) => ({
-            alias: missile.label,
-            src: `./assets/missiles/${missile.texture}.png`,
+          ...MISSILE_TYPES.Player.map((missile) => ({
+            alias: `${missile.name}_audio`,
+            src: `./assets/audio/${missile.name}.ogg`,
+          })),
+
+          ...PlayerJets.map((jet) => ({
+            alias: jet.name,
+            src: `./assets/player_jets/${jet.name}.png`,
+          })),
+
+          // ...GROUND_OBJECTS.map((ground) => ({
+          //   alias: ground,
+          //   src: `./assets/ground/${ground}.png`,
+          // })),
+
+          ...MISSILE_TYPES.Player.map((missile) => ({
+            alias: missile.name,
+            src: `./assets/missiles/${missile.name}.png`,
           })),
 
           ...ENEMY_TYPES.map((enemy) => ({
-            alias: enemy.label,
-            src: `./assets/enemies/${enemy.texture}.png`,
+            alias: enemy.name,
+            src: `./assets/enemies/${enemy.name}.png`,
           })),
 
           ...ENEMY_TYPES.filter((enemy) => enemy.missile).map((enemy) => ({
-            alias: enemy.missile!.label,
-            src: `./assets/missiles/${enemy.missile!.texture}.png`,
+            alias: enemy.missile!.name,
+            src: `./assets/missiles/${enemy.missile!.name}.png`,
           })),
         ]);
 

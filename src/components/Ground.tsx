@@ -1,7 +1,7 @@
 import { useApplication, useTick } from '@pixi/react';
 import { GROUND_OBJECTS } from '../data/world';
 import { Assets, Container, Sprite } from 'pixi.js';
-import { PADDING } from '../config';
+import { SCREEN_PADDING } from '../config';
 import { useRef, useState } from 'react';
 
 const GROUND_SPAWN_INTERVAL = 5000;
@@ -18,8 +18,8 @@ const Ground = () => {
     const groundObject = GROUND_OBJECTS[Math.floor(Math.random() * GROUND_OBJECTS.length)];
     const groundSprite = new Sprite(Assets.get(groundObject));
 
-    groundSprite.x = Math.random() * (screenWidth - PADDING * 2) + PADDING;
-    groundSprite.y = -PADDING;
+    groundSprite.x = Math.random() * (screenWidth - SCREEN_PADDING * 2) + SCREEN_PADDING;
+    groundSprite.y = -SCREEN_PADDING;
     groundSprite.scale.set(2);
 
     groundContainerRef.current?.addChild(groundSprite);

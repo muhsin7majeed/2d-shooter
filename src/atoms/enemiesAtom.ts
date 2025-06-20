@@ -1,16 +1,10 @@
 import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { Sprite } from 'pixi.js';
-import { EnemyTypeInterface } from '../data/enemies';
+import { RenderedEnemy } from '../types/enemy';
 
-export interface Enemy {
-  sprite: Sprite;
-  data: EnemyTypeInterface;
-}
+export const renderedEnemiesAtom = atom<RenderedEnemy[]>([]);
 
-export const enemiesAtom = atom<Enemy[]>([]);
+export const useSetRenderedEnemiesAtom = () => useSetAtom(renderedEnemiesAtom);
 
-export const useSetEnemiesAtom = () => useSetAtom(enemiesAtom);
+export const useEnemiesAtom = () => useAtom(renderedEnemiesAtom);
 
-export const useEnemiesAtom = () => useAtom(enemiesAtom);
-
-export const useEnemiesAtomValue = () => useAtomValue(enemiesAtom);
+export const useEnemiesAtomValue = () => useAtomValue(renderedEnemiesAtom);
