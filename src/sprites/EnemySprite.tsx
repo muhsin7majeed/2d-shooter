@@ -55,7 +55,7 @@ const EnemySprite = () => {
         data: {
           velocityX: (deltaXToTarget / length) * enemy.data.missile!.speed,
           velocityY: (deltaYToTarget / length) * enemy.data.missile!.speed,
-          damage: (enemy.data.damage * 50) / 100,
+          damage: enemy.data.missile!.damage,
         },
       },
     ]);
@@ -65,11 +65,13 @@ const EnemySprite = () => {
     const enemyType = getEnemyBasedOnScore(score);
 
     const enemy = new Sprite(Assets.get(enemyType.name));
+
     enemy.anchor.set(0.5);
     enemy.scale.set(enemyType.scale);
     enemy.rotation = Math.PI;
     enemy.x = Math.random() * (app.screen.width - SCREEN_PADDING * 2) + SCREEN_PADDING;
     enemy.y = -SCREEN_PADDING;
+
     enemyContainerRef.current?.addChild(enemy);
 
     setRenderedEnemies((prev) => [...prev, { sprite: enemy, data: enemyType }]);

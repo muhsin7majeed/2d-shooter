@@ -11,7 +11,6 @@ export const ENEMY_TYPES: EnemyJetTypeInterface[] = [
     damage: 45,
     health: 100,
     missile: MISSILE_TYPES.Enemy[0],
-
   },
   {
     name: 'enemy_2',
@@ -29,7 +28,7 @@ export const ENEMY_TYPES: EnemyJetTypeInterface[] = [
     scale: 2.5,
     spawnInterval: 500,
     spawnAfterScore: 20,
-    missile: MISSILE_TYPES.Enemy[0],
+    missile: MISSILE_TYPES.Enemy[1],
     damage: 25,
     health: 400,
   },

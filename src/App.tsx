@@ -33,8 +33,12 @@ export default function App() {
       try {
         await Assets.load([
           {
-            alias: 'enemy_hit_audio',
-            src: './assets/audio/enemy_hit.ogg',
+            alias: 'enemy_destroyed_audio',
+            src: './assets/audio/enemy_destroyed.ogg',
+          },
+          {
+            alias: 'player_hit_audio',
+            src: './assets/audio/player_hit.ogg',
           },
           {
             alias: 'enemy_hit',

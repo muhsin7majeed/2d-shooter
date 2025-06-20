@@ -61,12 +61,16 @@ const GameLoop = () => {
 
     // Check if the player health is greater than the damage
     if (playerHealth > damage) {
+      playSound('player_hit_audio');
+
       // Add the player hit sprite
       renderHitEffect('player_hit', playerRef.x, playerRef.y, 2, 200);
 
       // Update the player health
       setPlayerHealth((prev) => prev - damage);
     } else {
+      playSound('enemy_destroyed_audio'); // TODO: change to player destroyed audio
+
       // Update the player health
       setPlayerHealth(0);
 
@@ -84,7 +88,7 @@ const GameLoop = () => {
   const handlePlayerMissileHitEnemy = (enemy: RenderedEnemy) => {
     renderedPlayerMissiles.forEach((missile) => {
       if (hasSpriteCollided(missile.sprite, enemy.sprite)) {
-        playSound('enemy_hit_audio');
+        playSound('enemy_destroyed_audio');
 
         // Remove the missile
         missile.sprite.parent?.removeChild(missile.sprite);
@@ -107,7 +111,7 @@ const GameLoop = () => {
 
   const handlePlayerHitEnemy = (enemy: RenderedEnemy) => {
     if (playerRef && hasSpriteCollided(playerRef, enemy.sprite)) {
-      playSound('enemy_hit_audio');
+      playSound('enemy_destroyed_audio');
 
       // Remove the enemy
       enemy.sprite.parent?.removeChild(enemy.sprite);
@@ -123,8 +127,6 @@ const GameLoop = () => {
   const handleEnemyMissileHitPlayer = () => {
     renderedEnemyMissiles.forEach((missile) => {
       if (playerRef && hasSpriteCollided(missile.sprite, playerRef)) {
-        playSound('enemy_hit_audio');
-
         // Remove the missile
         missile.sprite.parent?.removeChild(missile.sprite);
         setRenderedEnemyMissiles((prev) => prev.filter((m) => m !== missile));
