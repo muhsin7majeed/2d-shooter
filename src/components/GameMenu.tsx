@@ -3,11 +3,11 @@ import { useMusicVolumeAtomValue } from '../atoms/gameplayAtom';
 import { useSetGameState } from '../atoms/gameStateAtom';
 import { MUSIC_TRACKS } from '../data/gameplay';
 import VolumeControls from './VolumeControls';
-import { useCurrentPlayerJetAtomValue, useSetPlayerHealth } from '../atoms/playerAtom';
+import { useCurrentPlayerJetAtomValue, useSetPlayerHealthAtom } from '../atoms/playerAtom';
 
 const GameMenu = () => {
   const setGameState = useSetGameState();
-  const setPlayerHealth = useSetPlayerHealth();
+  const setPlayerHealth = useSetPlayerHealthAtom();
   const musicVolume = useMusicVolumeAtomValue();
   const currentPlayerJet = useCurrentPlayerJetAtomValue();
 

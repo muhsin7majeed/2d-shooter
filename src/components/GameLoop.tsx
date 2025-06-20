@@ -2,7 +2,7 @@ import { useTick } from '@pixi/react';
 import { useRenderedEnemiesAtom, useRenderedEnemyMissilesAtom } from '../atoms/enemiesAtom';
 import { useRenderedPlayerMissilesAtom, useSetCurrentPlayerMissileAtom } from '../atoms/missileAtom';
 import { useScoreAtomValue, useSetHighScoreAtom, useSetScoreAtom } from '../atoms/scoreAtom';
-import { usePlayerRef } from '../atoms/playerAtom';
+import { useCurrentPlayerJetAtomValue, usePlayerHealthAtom, usePlayerRefAtomValue } from '../atoms/playerAtom';
 import { useSetGameState } from '../atoms/gameStateAtom';
 import { Container, Sprite } from 'pixi.js';
 import { Assets } from 'pixi.js';
@@ -13,7 +13,7 @@ import useSound from '../hooks/useSound';
 import { RenderedEnemy } from '../types/enemy';
 
 const GameLoop = () => {
-  const playerRef = usePlayerRef();
+  const playerRef = usePlayerRefAtomValue();
   const enemyHitContainerRef = useRef<Container>(null);
   const playerHitContainerRef = useRef<Container>(null);
 
@@ -22,8 +22,10 @@ const GameLoop = () => {
   const setGameState = useSetGameState();
   const setHighScore = useSetHighScoreAtom();
   const setCurrentPlayerMissile = useSetCurrentPlayerMissileAtom();
+  const currentPlayerJet = useCurrentPlayerJetAtomValue();
   const { playSound } = useSound();
 
+  const [playerHealth, setPlayerHealth] = usePlayerHealthAtom();
   const [renderedEnemyMissiles, setRenderedEnemyMissiles] = useRenderedEnemyMissilesAtom();
   const [renderedPowerUps, setRenderedPowerUps] = useRenderedPowerUpsAtom();
   const [renderedEnemies, setRenderedEnemies] = useRenderedEnemiesAtom();
@@ -35,7 +37,7 @@ const GameLoop = () => {
     });
   };
 
-  const renderHitEffect = (assetName: string, x: number, y: number, scale: number = 2) => {
+  const renderHitEffect = (assetName: string, x: number, y: number, scale: number = 2, duration: number = 300) => {
     const enemyHit = new Sprite(Assets.get(assetName));
 
     enemyHit.anchor.set(0.5);
@@ -48,7 +50,35 @@ const GameLoop = () => {
     // Remove the hit effect after 300ms
     setTimeout(() => {
       enemyHit.parent?.removeChild(enemyHit);
-    }, 300);
+    }, duration);
+  };
+
+  const handlePlayerHealthAndGameOver = (enemyDamage: number) => {
+    if (!playerRef) return;
+
+    // Calculate the damage
+    const damage = (currentPlayerJet.health * enemyDamage) / 100;
+
+    // Check if the player health is greater than the damage
+    if (playerHealth > damage) {
+      // Add the player hit sprite
+      renderHitEffect('player_hit', playerRef.x, playerRef.y, 2, 200);
+
+      // Update the player health
+      setPlayerHealth((prev) => prev - damage);
+    } else {
+      // Update the player health
+      setPlayerHealth(0);
+
+      // Add the player hit sprite
+      renderHitEffect('player_destroyed', playerRef.x, playerRef.y, 4);
+
+      // Update the high score
+      updateHighScore(score);
+
+      // Update the game state
+      setGameState('gameover');
+    }
   };
 
   const handlePlayerMissileHitEnemy = (enemy: RenderedEnemy) => {
@@ -81,17 +111,12 @@ const GameLoop = () => {
 
       // Remove the enemy
       enemy.sprite.parent?.removeChild(enemy.sprite);
-      // Update the atoms to remove the collided objects
+
+      // Remove collided enemy from the rendered enemies array
       setRenderedEnemies((prev) => prev.filter((e) => e !== enemy));
 
-      // Add the player hit sprite
-      renderHitEffect('player_hit', playerRef.x, playerRef.y, 4);
-
-      // Update the high score
-      updateHighScore(score);
-
-      // Update the game state
-      setGameState('gameover');
+      // Handle player health and game over
+      handlePlayerHealthAndGameOver(enemy.data.damage);
     }
   };
 
@@ -104,14 +129,8 @@ const GameLoop = () => {
         missile.sprite.parent?.removeChild(missile.sprite);
         setRenderedEnemyMissiles((prev) => prev.filter((m) => m !== missile));
 
-        // Show hit effect
-        renderHitEffect('player_hit', playerRef.x, playerRef.y, 4);
-
-        // Update the high score
-        updateHighScore(score);
-
-        // Update the game state
-        setGameState('gameover');
+        // Handle player health and game over
+        handlePlayerHealthAndGameOver(missile.data.damage);
       }
     });
   };
@@ -119,13 +138,13 @@ const GameLoop = () => {
   const handlePlayerHitPowerUp = () => {
     renderedPowerUps.forEach((powerUp) => {
       if (playerRef && hasSpriteCollided(playerRef, powerUp.sprite)) {
-        // Handle collision
-        // 1. Remove the powerup
+        // Remove the powerup
         powerUp.sprite.parent?.removeChild(powerUp.sprite);
-        // 2. Update the atoms to remove the collided objects
+
+        // Update the atoms to remove the collided objects
         setRenderedPowerUps((prev) => prev.filter((p) => p !== powerUp));
 
-        // 3. Update the current missile atom
+        // Update the current missile atom
         setCurrentPlayerMissile(powerUp.type);
       }
     });

@@ -9,7 +9,7 @@ import {
 } from '../atoms/enemiesAtom';
 import { useScoreAtomValue } from '../atoms/scoreAtom';
 import { getEnemyBasedOnScore } from '../helpers/getEnemyBasedOnScore';
-import { usePlayerRef } from '../atoms/playerAtom';
+import { usePlayerRefAtomValue } from '../atoms/playerAtom';
 import { RenderedEnemy } from '../types/enemy';
 
 const EnemySprite = () => {
@@ -18,7 +18,7 @@ const EnemySprite = () => {
   const score = useScoreAtomValue();
   const setRenderedEnemyMissiles = useSetRenderedEnemyMissilesAtom();
   const enemyMissileContainerRef = useRef<Container>(null);
-  const playerRef = usePlayerRef();
+  const playerRef = usePlayerRefAtomValue();
   const [lastSpawnTime, setLastSpawnTime] = useState(0);
   const [lastMissileSpawnTime, setLastMissileSpawnTime] = useState(0);
   const { app } = useApplication();
@@ -55,6 +55,7 @@ const EnemySprite = () => {
         data: {
           velocityX: (deltaXToTarget / length) * enemy.data.missile!.speed,
           velocityY: (deltaYToTarget / length) * enemy.data.missile!.speed,
+          damage: (enemy.data.damage * 50) / 100,
         },
       },
     ]);

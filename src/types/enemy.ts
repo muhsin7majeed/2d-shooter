@@ -11,6 +11,7 @@ export interface RenderedEnemyMissile {
   data: {
     velocityX: number;
     velocityY: number;
+    damage: number;
   };
 }
 
@@ -19,6 +20,7 @@ export interface EnemyJetTypeInterface extends JetTypeInterface {
   spawnInterval: number;
   spawnAfterScore: number;
   missile?: EnemyMissileType;
+  damage: number;
 }
 
 export interface EnemyMissileType extends MissileType {

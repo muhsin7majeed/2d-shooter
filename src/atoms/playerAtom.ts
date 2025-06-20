@@ -5,34 +5,18 @@ import { PLAYER_JETS } from '../data/player';
 
 export const playerRefAtom = atom<Sprite | null>(null);
 
-export const usePlayerAtom = () => {
-  return useAtom(playerRefAtom);
-};
+export const usePlayerRefAtom = () => useAtom(playerRefAtom);
+export const usePlayerRefAtomValue = () => useAtomValue(playerRefAtom);
+export const useSetPlayerRefAtom = () => useSetAtom(playerRefAtom);
 
-export const usePlayerRef = () => {
-  return useAtomValue(playerRefAtom);
-};
+const playerHealthAtom = atom(PLAYER_JETS[0].health);
 
-export const useSetPlayerRef = () => {
-  return useSetAtom(playerRefAtom);
-};
-
-const playerHealthAtom = atom(100);
-
-export const usePlayerHealth = () => {
-  return useAtomValue(playerHealthAtom);
-};
-
-export const useSetPlayerHealth = () => {
-  return useSetAtom(playerHealthAtom);
-};
+export const usePlayerHealthAtom = () => useAtom(playerHealthAtom);
+export const usePlayerHealthAtomValue = () => useAtomValue(playerHealthAtom);
+export const useSetPlayerHealthAtom = () => useSetAtom(playerHealthAtom);
 
 const currentPlayerJetAtom = atom<PlayerJetTypeInterface>(PLAYER_JETS[0]);
 
-export const useCurrentPlayerJetAtomValue = () => {
-  return useAtomValue(currentPlayerJetAtom);
-};
-
-export const useSetCurrentPlayerJetAtom = () => {
-  return useSetAtom(currentPlayerJetAtom);
-};
+export const useCurrentPlayerJetAtom = () => useAtom(currentPlayerJetAtom);
+export const useCurrentPlayerJetAtomValue = () => useAtomValue(currentPlayerJetAtom);
+export const useSetCurrentPlayerJetAtom = () => useSetAtom(currentPlayerJetAtom);

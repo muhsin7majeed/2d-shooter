@@ -1,4 +1,4 @@
-import { EnemyJetTypeInterface } from '../types/player';
+import { EnemyJetTypeInterface } from '../types/enemy';
 import { MISSILE_TYPES } from './missiles';
 
 export const ENEMY_TYPES: EnemyJetTypeInterface[] = [
@@ -8,6 +8,10 @@ export const ENEMY_TYPES: EnemyJetTypeInterface[] = [
     scale: 2,
     spawnInterval: 2000,
     spawnAfterScore: 0,
+    damage: 45,
+    health: 100,
+    missile: MISSILE_TYPES.Enemy[0],
+
   },
   {
     name: 'enemy_2',
@@ -16,6 +20,8 @@ export const ENEMY_TYPES: EnemyJetTypeInterface[] = [
     spawnInterval: 1000,
     spawnAfterScore: 10,
     missile: MISSILE_TYPES.Enemy[0],
+    damage: 20,
+    health: 300,
   },
   {
     name: 'enemy_3',
@@ -24,5 +30,7 @@ export const ENEMY_TYPES: EnemyJetTypeInterface[] = [
     spawnInterval: 500,
     spawnAfterScore: 20,
     missile: MISSILE_TYPES.Enemy[0],
+    damage: 25,
+    health: 400,
   },
 ] as const;

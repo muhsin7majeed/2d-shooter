@@ -44,6 +44,10 @@ export default function App() {
             alias: 'player_hit',
             src: './assets/hitmarks/player_hit.png',
           },
+          {
+            alias: 'player_destroyed',
+            src: './assets/hitmarks/player_destroyed.png',
+          },
 
           ...MUSIC_TRACKS.map((track) => ({
             alias: track.id,

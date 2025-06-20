@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import useControls from '../hooks/useControls';
 import { SCREEN_PADDING } from '../config';
 import { useCurrentPlayerMissileAtomValue, useSetRenderedPlayerMissilesAtom } from '../atoms/missileAtom';
-import { useCurrentPlayerJetAtomValue, useSetPlayerRef } from '../atoms/playerAtom';
+import { useCurrentPlayerJetAtomValue, useSetPlayerRefAtom } from '../atoms/playerAtom';
 import { sound } from '@pixi/sound';
 import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
 
@@ -27,7 +27,7 @@ const PlayerSprite = () => {
   const currentPlayerJet = useCurrentPlayerJetAtomValue();
 
   const setRenderedPlayerMissiles = useSetRenderedPlayerMissilesAtom();
-  const setPlayerRef = useSetPlayerRef();
+  const setPlayerRef = useSetPlayerRefAtom();
 
   useEffect(() => {
     if (jetSpriteRef.current) {
