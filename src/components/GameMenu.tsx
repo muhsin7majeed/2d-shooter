@@ -5,6 +5,7 @@ import { MUSIC_TRACKS } from '../data/gameplay';
 import VolumeControls from './VolumeControls';
 import { useCurrentPlayerJetAtomValue, useSetPlayerHealthAtom } from '../atoms/playerAtom';
 import StarfieldBackground from './StarfieldWrapper';
+import GameCredits from './GameCredits';
 
 const GameMenu = () => {
   const setGameState = useSetGameState();
@@ -44,13 +45,25 @@ const GameMenu = () => {
         >
           Settings
         </button>
+
+        <button
+          type="button"
+          className="nes-btn"
+          onClick={() => {
+            (document.getElementById('dialog-credits') as HTMLDialogElement)?.showModal();
+          }}
+        >
+          Credits
+        </button>
       </div>
 
       <section>
         <dialog className="nes-dialog" id="dialog-default">
-          <menu className="dialog-menu">
-            <VolumeControls />
+          <h1>Settings</h1>
+          <hr />
 
+          <VolumeControls />
+          <menu className="dialog-menu">
             <button
               className="nes-btn"
               onClick={() => {
@@ -61,6 +74,29 @@ const GameMenu = () => {
             </button>
           </menu>
         </dialog>
+      </section>
+
+      <section>
+        <dialog className="nes-dialog" id="dialog-credits">
+          <GameCredits />
+
+          <menu>
+            <button
+              className="nes-btn"
+              onClick={() => {
+                (document.getElementById('dialog-credits') as HTMLDialogElement)?.close();
+              }}
+            >
+              Close
+            </button>
+          </menu>
+        </dialog>
+      </section>
+
+      <section className="social-links">
+        <a href="https://github.com/muhsin7majeed/worlds-on-fire" target="_blank" rel="noopener noreferrer">
+          <i className="nes-icon github" />
+        </a>
       </section>
     </StarfieldBackground>
   );
