@@ -16,6 +16,7 @@ import { ENEMY_TYPES } from './data/enemies';
 import { MUSIC_TRACKS } from './data/gameplay';
 import { PLAYER_JETS } from './data/player';
 import { POWERUP_TYPES } from './data/powerups';
+import Starfield from './components/Starfield';
 
 // extend tells @pixi/react what Pixi.js components are availables
 extend({
@@ -74,11 +75,6 @@ export default function App() {
             src: `./assets/player_jets/${jet.name}.png`,
           })),
 
-          // ...GROUND_OBJECTS.map((ground) => ({
-          //   alias: ground,
-          //   src: `./assets/ground/${ground}.png`,
-          // })),
-
           ...MISSILE_TYPES.Player.map((missile) => ({
             alias: missile.name,
             src: `./assets/missiles/${missile.name}.png`,
@@ -132,8 +128,8 @@ export default function App() {
 
       {gameState === 'gameover' && <GameOver />}
 
-      <Application background={'#1099bb'} resizeTo={window} ref={appRef}>
-        {/* <Ground /> */}
+      <Application background={'#000000'} width={window.innerWidth} height={window.innerHeight} ref={appRef}>
+        <Starfield />
         <DevTools />
         <JetSprite />
         <EnemySprite />

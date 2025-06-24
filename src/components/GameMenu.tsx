@@ -4,6 +4,7 @@ import { useSetGameState } from '../atoms/gameStateAtom';
 import { MUSIC_TRACKS } from '../data/gameplay';
 import VolumeControls from './VolumeControls';
 import { useCurrentPlayerJetAtomValue, useSetPlayerHealthAtom } from '../atoms/playerAtom';
+import StarfieldBackground from './StarfieldWrapper';
 
 const GameMenu = () => {
   const setGameState = useSetGameState();
@@ -24,7 +25,9 @@ const GameMenu = () => {
   };
 
   return (
-    <div className="game-menu">
+    <StarfieldBackground contentClassName="game-menu">
+      <img className="game-menu-logo" src="./assets/player_jets/player_jet_1.png" alt="logo" />
+
       <h1>World's On Fire</h1>
 
       <div className="game-menu-buttons">
@@ -59,7 +62,7 @@ const GameMenu = () => {
           </menu>
         </dialog>
       </section>
-    </div>
+    </StarfieldBackground>
   );
 };
 

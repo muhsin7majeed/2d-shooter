@@ -17,14 +17,22 @@ const GameStats = () => {
 
   return (
     <div className="game-stats">
-      <div className="play-pause-btn">
-        {gameState === 'playing' && <button onClick={handlePause}>Pause</button>}
-        {gameState === 'paused' && <button onClick={handlePause}>Play</button>}
-      </div>
-
       <div className="score-container">
         <i className="nes-icon trophy" />
         <span>{score}</span>
+      </div>
+
+      <div className="play-pause-btn">
+        {gameState === 'playing' && (
+          <button className="nes-btn" onClick={handlePause}>
+            Pause
+          </button>
+        )}
+        {gameState === 'paused' && (
+          <button className="nes-btn" onClick={handlePause}>
+            Play
+          </button>
+        )}
       </div>
 
       <div className="health-container">
