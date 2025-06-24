@@ -5,7 +5,6 @@ const VolumeControls = () => {
   const [musicVolume, setMusicVolume] = useMusicVolumeAtom();
 
   const handleEffectsVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
     setEffectsVolume(Number(e.target.value));
   };
 

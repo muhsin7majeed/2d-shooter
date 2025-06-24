@@ -1,5 +1,6 @@
 import { Sprite } from 'pixi.js';
 import { JetTypeInterface, MissileType } from './common';
+import { DefensePowerUpType } from './powerup';
 
 export interface PlayerJetTypeInterface extends JetTypeInterface {
   name: 'player_jet_1';
@@ -17,5 +18,5 @@ export interface RenderedPlayerMissile {
 
 export interface RenderedPowerUp {
   sprite: Sprite;
-  type: PlayerMissileType;
+  type: PlayerMissileType | DefensePowerUpType;
 }

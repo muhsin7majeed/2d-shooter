@@ -2,22 +2,42 @@ import { useRef, useState } from 'react';
 import { Assets, Container, Sprite } from 'pixi.js';
 import { useApplication, useTick } from '@pixi/react';
 import { SCREEN_PADDING } from '../config';
-import { MISSILE_TYPES } from '../data/missiles';
 import { useSetRenderedPowerUpsAtom } from '../atoms/powerUpsAtom';
+import { useCurrentPlayerJetAtomValue, usePlayerHealthAtomValue } from '../atoms/playerAtom';
+import { POWERUP_TYPES } from '../data/powerups';
 
-const SPAWN_INTERVAL = 10000;
+const OFFENSE_SPAWN_INTERVAL = 1000;
+const DEFENSE_SPAWN_INTERVAL = 1000;
 const FALL_SPEED = 2;
 
 const PowerUpSprite = () => {
   const powerUpContainerRef = useRef<Container>(null);
-  const [lastSpawnTime, setLastSpawnTime] = useState(0);
+  const [lastDefenseSpawnTime, setLastDefenseSpawnTime] = useState(0);
+  const [lastOffenseSpawnTime, setLastOffenseSpawnTime] = useState(0);
   const { app } = useApplication();
   const setRenderedPowerUps = useSetRenderedPowerUpsAtom();
+  const playerHealth = usePlayerHealthAtomValue();
+  const currentPlayerJet = useCurrentPlayerJetAtomValue();
 
-  const spawnRandomPowerUp = () => {
-    const randomMissileType = MISSILE_TYPES.Player.filter((type) => type.name !== 'missile_1')[
-      Math.floor(Math.random() * MISSILE_TYPES.Player.length)
-    ];
+  const spawnRandomDefensePowerUp = () => {
+    const randomPowerUpType = POWERUP_TYPES.Defense.options[0];
+
+    if (randomPowerUpType) {
+      const powerup = new Sprite(Assets.get(randomPowerUpType.name));
+
+      powerup.anchor.set(0.5);
+      powerup.scale.set(3);
+      powerup.x = Math.random() * (app.screen.width - SCREEN_PADDING * 2) + SCREEN_PADDING;
+      powerup.y = -SCREEN_PADDING;
+
+      powerUpContainerRef.current?.addChild(powerup);
+      setRenderedPowerUps((prev) => [...prev, { sprite: powerup, type: randomPowerUpType }]);
+    }
+  };
+
+  const spawnRandomOffensePowerUp = () => {
+    const randomMissileType =
+      POWERUP_TYPES.Offense.options[Math.floor(Math.random() * POWERUP_TYPES.Offense.options.length)];
 
     if (randomMissileType) {
       const powerUp = new Sprite(Assets.get(randomMissileType.name));
@@ -33,9 +53,14 @@ const PowerUpSprite = () => {
   };
 
   useTick((ticker) => {
-    if (ticker.lastTime - lastSpawnTime > SPAWN_INTERVAL) {
-      spawnRandomPowerUp();
-      setLastSpawnTime(ticker.lastTime);
+    if (ticker.lastTime - lastDefenseSpawnTime > DEFENSE_SPAWN_INTERVAL && playerHealth < currentPlayerJet.health) {
+      spawnRandomDefensePowerUp();
+      setLastDefenseSpawnTime(ticker.lastTime);
+    }
+
+    if (ticker.lastTime - lastOffenseSpawnTime > OFFENSE_SPAWN_INTERVAL) {
+      spawnRandomOffensePowerUp();
+      setLastOffenseSpawnTime(ticker.lastTime);
     }
 
     setRenderedPowerUps((prev) =>

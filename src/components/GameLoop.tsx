@@ -11,6 +11,8 @@ import hasSpriteCollided from '../helpers/hasSpriteCollided';
 import { useRenderedPowerUpsAtom } from '../atoms/powerUpsAtom';
 import useSound from '../hooks/useSound';
 import { RenderedEnemy } from '../types/enemy';
+import { PlayerMissileType } from '../types/player';
+import { DefensePowerUpType } from '../types/powerup';
 
 const GameLoop = () => {
   const playerRef = usePlayerRefAtomValue();
@@ -174,8 +176,19 @@ const GameLoop = () => {
         // Update the atoms to remove the collided objects
         setRenderedPowerUps((prev) => prev.filter((p) => p !== powerUp));
 
-        // Update the current missile atom
-        setCurrentPlayerMissile(powerUp.type);
+        // Update the player health
+        if (powerUp.type.name === 'health') {
+          setPlayerHealth((prev) => {
+            const health = (powerUp.type as DefensePowerUpType).health!;
+
+            return Math.min(prev + health, currentPlayerJet.health);
+          });
+        } else if (powerUp.type.name === 'shield') {
+          // TODO: add shield logic
+        } else {
+          // Update the current missile atom
+          setCurrentPlayerMissile(powerUp.type as PlayerMissileType);
+        }
       }
     });
   };
