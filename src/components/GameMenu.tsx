@@ -31,6 +31,12 @@ const GameMenu = () => {
 
       <h1>World's On Fire</h1>
 
+      <section className="game-menu-description">
+        <p>World's On Fire is a 2D arcade shooter where you fight endless enemies and upgrade your jet.</p>
+        <p>Use keyboard or touch to control. Survive as long as you can!</p>
+        <p>Made with PixiJS and React.</p>
+      </section>
+
       <div className="game-menu-buttons">
         <button className="nes-btn is-success" onClick={startGame}>
           Start Game

@@ -3,14 +3,49 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/style.css" />
-    <title>World's On Fire</title>
+    <title>World's On Fire - Infinite Sky Shooter</title>
+    <meta
+      name="description"
+      content="A fast-paced infinite sky shooter. Dodge enemies, upgrade weapons, and survive. All in your browser!"
+    />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://muhsin7majeed.github.io/worlds-on-fire/" />
+
+    <!-- OpenGraph (for social previews) -->
+    <meta property="og:title" content="Worlds on Fire" />
+    <meta property="og:description" content="Can you survive the infinite waves?" />
+    <meta property="og:image" content="/assets/cover.png" />
+    <meta property="og:url" content="https://wof.muhsi.in" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Worlds on Fire" />
+    <meta name="twitter:description" content="Can you survive the infinite waves?" />
+    <meta name="twitter:image" content="/assets/cover.png" />
   </head>
   <body>
     <div id="app">
       <div id="pixi-container" style="height: 100%"></div>
     </div>
     <script type="module" src="/src/main.tsx"></script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "Worlds on Fire",
+        "url": "https://wof.muhsi.in",
+        "applicationCategory": "Game",
+        "operatingSystem": "All",
+        "genre": "Arcade",
+        "author": {
+          "@type": "Person",
+          "name": "muhsin7majeed"
+        }
+      }
+    </script>
   </body>
 </html>
