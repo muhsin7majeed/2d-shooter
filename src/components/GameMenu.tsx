@@ -26,9 +26,39 @@ const GameMenu = () => {
   return (
     <div className="game-menu">
       <h1>World's On Fire</h1>
-      <button onClick={startGame}>Start Game</button>
 
-      <VolumeControls />
+      <div className="game-menu-buttons">
+        <button className="nes-btn is-success" onClick={startGame}>
+          Start Game
+        </button>
+
+        <button
+          type="button"
+          className="nes-btn"
+          onClick={() => {
+            (document.getElementById('dialog-default') as HTMLDialogElement)?.showModal();
+          }}
+        >
+          Settings
+        </button>
+      </div>
+
+      <section>
+        <dialog className="nes-dialog" id="dialog-default">
+          <menu className="dialog-menu">
+            <VolumeControls />
+
+            <button
+              className="nes-btn"
+              onClick={() => {
+                (document.getElementById('dialog-default') as HTMLDialogElement)?.close();
+              }}
+            >
+              Close
+            </button>
+          </menu>
+        </dialog>
+      </section>
     </div>
   );
 };

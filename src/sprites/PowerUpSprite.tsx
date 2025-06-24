@@ -6,8 +6,8 @@ import { useSetRenderedPowerUpsAtom } from '../atoms/powerUpsAtom';
 import { useCurrentPlayerJetAtomValue, usePlayerHealthAtomValue } from '../atoms/playerAtom';
 import { POWERUP_TYPES } from '../data/powerups';
 
-const OFFENSE_SPAWN_INTERVAL = 1000;
-const DEFENSE_SPAWN_INTERVAL = 1000;
+const OFFENSE_SPAWN_INTERVAL = 10000;
+const DEFENSE_SPAWN_INTERVAL = 15000;
 const FALL_SPEED = 2;
 
 const PowerUpSprite = () => {

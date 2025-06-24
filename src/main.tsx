@@ -1,5 +1,6 @@
 import { createRoot } from 'react-dom/client';
-import './main.css';
+import './styles/main.css';
+import 'nes.css/css/nes.min.css';
 
 import App from './App.tsx';
 

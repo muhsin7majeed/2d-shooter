@@ -127,7 +127,7 @@ export default function App() {
   }
 
   return (
-    <>
+    <div className="game-container">
       <GameStats />
 
       {gameState === 'gameover' && <GameOver />}
@@ -140,6 +140,6 @@ export default function App() {
         <PowerUpSprite />
         <GameLoop />
       </Application>
-    </>
+    </div>
   );
 }

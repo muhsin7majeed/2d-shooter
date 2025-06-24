@@ -27,11 +27,13 @@ const GameOver = () => {
 
   return (
     <div className="game-over">
-      <div className="game-over-title">Game Over</div>
+      <div className="game-over-title">Game Over!</div>
       <div className="game-over-score">Score: {score}</div>
       <div className="game-over-high-score">High Score: {highScore}</div>
 
-      <button onClick={handleReset}>Menu</button>
+      <button className="nes-btn" onClick={handleReset}>
+        Menu
+      </button>
     </div>
   );
 };

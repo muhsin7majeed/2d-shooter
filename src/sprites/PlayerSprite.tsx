@@ -8,7 +8,7 @@ import { useCurrentPlayerJetAtomValue, useSetPlayerRefAtom } from '../atoms/play
 import { sound } from '@pixi/sound';
 import { useEffectsVolumeAtomValue } from '../atoms/gameplayAtom';
 
-const FRICTION = 0.1;
+const FRICTION = 0.2;
 const TOUCH_PADDING = 100;
 
 const PlayerSprite = () => {
