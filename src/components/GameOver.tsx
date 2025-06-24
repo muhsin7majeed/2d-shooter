@@ -1,9 +1,12 @@
-import { useSetRenderedEnemiesAtom } from '../atoms/enemiesAtom';
+import { useSetRenderedEnemiesAtom, useSetRenderedEnemyMissilesAtom } from '../atoms/enemiesAtom';
 import { useSetGameState } from '../atoms/gameStateAtom';
 import { useSetCurrentPlayerMissileAtom, useSetRenderedPlayerMissilesAtom } from '../atoms/missileAtom';
 import { useHighScoreAtomValue, useScoreAtomValue, useSetScoreAtom } from '../atoms/scoreAtom';
 import { sound } from '@pixi/sound';
 import { MISSILE_TYPES } from '../data/missiles';
+import { useSetCurrentPlayerJetAtom, useSetPlayerHealthAtom } from '../atoms/playerAtom';
+import { PLAYER_JETS } from '../data/player';
+import { useSetRenderedPowerUpsAtom } from '../atoms/powerUpsAtom';
 
 const GameOver = () => {
   const score = useScoreAtomValue();
@@ -14,12 +17,29 @@ const GameOver = () => {
   const setRenderedEnemies = useSetRenderedEnemiesAtom();
   const setScore = useSetScoreAtom();
   const setCurrentPlayerMissileAtom = useSetCurrentPlayerMissileAtom();
+  const setRenderedEnemyMissiles = useSetRenderedEnemyMissilesAtom();
+  const setPlayerHealth = useSetPlayerHealthAtom();
+  const setCurrentPlayerJet = useSetCurrentPlayerJetAtom();
+  const setRenderedPowerUps = useSetRenderedPowerUpsAtom();
 
-  const handleReset = () => {
+  const resetRenderedEntities = () => {
     setRenderedPlayerMissiles([]);
     setRenderedEnemies([]);
-    setScore(0);
+    setRenderedEnemyMissiles([]);
+    setRenderedPowerUps([]);
+  };
+
+  const resetPlayer = () => {
+    setPlayerHealth(PLAYER_JETS[0].health);
+    setCurrentPlayerJet(PLAYER_JETS[0]);
     setCurrentPlayerMissileAtom(MISSILE_TYPES.Player[0]);
+  };
+
+  const handleReset = () => {
+    resetRenderedEntities();
+    resetPlayer();
+
+    setScore(0);
     setGameState('menu');
 
     sound.stopAll();
