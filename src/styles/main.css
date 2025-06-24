@@ -1,13 +1,8 @@
-@import './node_modules/nes.css/css/nes.css';
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 * {
   box-sizing: border-box;
   font-size: 16px;
-}
-
-@font-face {
-  font-family: 'Press Start 2P';
-  src: url('./assets/fonts/PressStart2P-Regular.ttf') format('truetype');
 }
 
 html,
